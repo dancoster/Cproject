@@ -1,4 +1,5 @@
 #include "main_aux.h"
+#include "unistd.h"
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -77,10 +78,46 @@ int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImag
 		fclose(featsFile);
 	}
 
-//	else //extracting from feats files
-//	{
+	else //extracting from feats files
+	{
+		int pcaNumComp = spConfigGetPCADim(config, msg);
+		//getting features from files
+		for (int i=0; i<numOfImgs; i++) {
 
-//	}
+			//get current image path
+			*msg = spConfigGetFeatsPath(path, config ,i);
+
+			//checks if the feats file is availble
+			if( access( path, F_OK ) == -1 ) {
+			    // file doesn't exist
+				spLoggerPrintError(FEATS_ERROR,__FILE__,__func__,__LINE__);
+				return (-1);
+			}
+
+			FILE* featuresFile = fopen(path,"r");
+
+			//checks if read failed
+			if (featuresFile == NULL){
+				spLoggerPrintError(FEAT_READ_ERROR,__FILE__,__func__,__LINE__);
+				fclose(featureFile);
+			}
+
+			//read features
+
+			SPPoint* featuresArray = malloc(sizeof(SPPoint) *(*numOfFeaturesPerImage));
+			//??add malloc faliure
+
+			for(int i = 0; i < *numOfFeaturesPerImage; i++){
+
+				double* valuesArray = malloc(sizeof(double)* pcaNumComp);
+				featuresArray[i] = spPointCreate(valuesArray, pcaNumComp, i); // create a new point with the i-th feature
+				free(data);
+			}
+
+
+			//get current image path
+		}
+	}
 
 	return 1;
 }
