@@ -99,19 +99,19 @@ int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImag
 			//checks if read failed
 			if (featuresFile == NULL){
 				spLoggerPrintError(FEAT_READ_ERROR,__FILE__,__func__,__LINE__);
-				fclose(featureFile);
+				fclose(featuresFile);
 			}
 
 			//read features
 
-			SPPoint* featuresArray = malloc(sizeof(SPPoint) *(*numOfFeaturesPerImage));
+//			SPPoint* featuresArray = malloc(sizeof(SPPoint) * *numOfFeaturesPerImage);
 			//??add malloc faliure
 
 			for(int i = 0; i < *numOfFeaturesPerImage; i++){
 
-				double* valuesArray = malloc(sizeof(double)* pcaNumComp);
-				featuresArray[i] = spPointCreate(valuesArray, pcaNumComp, i); // create a new point with the i-th feature
-				free(data);
+//				double* valuesArray = (double*) malloc(sizeof * pcaNumComp);
+//				featuresArray[i] = spPointCreate(valuesArray, pcaNumComp, i); // create a new point with the i-th feature
+//				free(data);
 			}
 
 
