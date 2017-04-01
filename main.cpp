@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 		}
 		int numOfAllFeatures=0;
 		//creating the sift Database
-
+		//comment
 		//if unsuccessful terminate program
 		if (extractFeatures(siftDB, numOfImgs, numOfFeaturesPerImage, &numOfAllFeatures, config, &msg) == -1) {
 			terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,NULL,0,NULL);
