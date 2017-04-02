@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		int* counter = countKClosestPerFeature(config, &msg, featuresTree, numOfImgs, queryPath);
-		if (counter == NULL) {
+		if (counter==NULL) {
 			spLoggerPrintError(COUNT_K_CLOSEST_ERROR,__FILE__,__func__,__LINE__);
 			terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,allFeaturesArr,numOfAllFeatures,featuresTree);
 			return -1;
