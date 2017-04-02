@@ -78,46 +78,46 @@ int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImag
 		fclose(featsFile);
 	}
 
-	else //extracting from feats files
-	{
-		int pcaNumComp = spConfigGetPCADim(config, msg);
-		//getting features from files
-		for (int i=0; i<numOfImgs; i++) {
-
-			//get current image path
-			*msg = spConfigGetFeatsPath(path, config ,i);
-
-			//checks if the feats file is availble
-			if( access( path, F_OK ) == -1 ) {
-			    // file doesn't exist
-				spLoggerPrintError(FEATS_ERROR,__FILE__,__func__,__LINE__);
-				return (-1);
-			}
-
-			FILE* featuresFile = fopen(path,"r");
-
-			//checks if read failed
-			if (featuresFile == NULL){
-				spLoggerPrintError(FEAT_READ_ERROR,__FILE__,__func__,__LINE__);
-				fclose(featuresFile);
-			}
-
-			//read features
-
-//			SPPoint* featuresArray = malloc(sizeof(SPPoint) * *numOfFeaturesPerImage);
-			//??add malloc faliure
-
-			for(int i = 0; i < *numOfFeaturesPerImage; i++){
-
-//				double* valuesArray = (double*) malloc(sizeof * pcaNumComp);
-//				featuresArray[i] = spPointCreate(valuesArray, pcaNumComp, i); // create a new point with the i-th feature
-//				free(data);
-			}
-
-
-			//get current image path
-		}
-	}
+//	else //extracting from feats files
+//	{
+//		int pcaNumComp = spConfigGetPCADim(config, msg);
+//		//getting features from files
+//		for (int i=0; i<numOfImgs; i++) {
+//
+//			//get current image path
+//			*msg = spConfigGetFeatsPath(path, config ,i);
+//
+//			//checks if the feats file is availble
+//			if( access( path, F_OK ) == -1 ) {
+//			    // file doesn't exist
+//				spLoggerPrintError(FEATS_ERROR,__FILE__,__func__,__LINE__);
+//				return (-1);
+//			}
+//
+//			FILE* featuresFile = fopen(path,"r");
+//
+//			//checks if read failed
+//			if (featuresFile == NULL){
+//				spLoggerPrintError(FEAT_READ_ERROR,__FILE__,__func__,__LINE__);
+//				fclose(featuresFile);
+//			}
+//
+//			//read features
+//
+////			SPPoint* featuresArray = malloc(sizeof(SPPoint) * *numOfFeaturesPerImage);
+//			//??add malloc faliure
+//
+//			for(int i = 0; i < *numOfFeaturesPerImage; i++){
+//
+////				double* valuesArray = (double*) malloc(sizeof * pcaNumComp);
+////				featuresArray[i] = spPointCreate(valuesArray, pcaNumComp, i); // create a new point with the i-th feature
+////				free(data);
+//			}
+//
+//
+//			//get current image path
+//		}
+//	}
 
 	return 1;
 }
