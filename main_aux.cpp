@@ -4,18 +4,28 @@
 #include <cstdio>
 #include <cstring>
 
+/**
+ * A comparator which compares two SPPoints by i-th coordinate.
+ *
+ * @param a - an element to compare (casted to BPQueueElement*)
+ * @param b - an element to compare (casted to BPQueueElement*)
+ *
+ * @return
+ * -1 if a.value > b.value, 1 if a.value < b.value
+ * if a.value == b.value, returns -1 if a.index < b.index, 1 if a.index > b.index
+ */
 int cmpfunc(const void *a, const void *b);
 
 int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg) {
+	if (siftDB==NULL || numOfImgs<1 || numOfFeaturesPerImage==NULL || numOfAllFeatures==NULL || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
 	ImageProc ip(config);
 	char path[STR_MAX_LENGTH+1] = {'\0'};
 	FILE* featsFile=NULL;
-	//check allocation error
-	if(path==NULL) {
-		spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
-		return -1;
-	}
 
 	//extracting of sift features from images or from files
 	if (spConfigIsExtractionMode(config, msg)) { //extracting from images and saving to feats files
@@ -134,6 +144,11 @@ int createAllFeaturesArray(SPPoint** allFeaturesArr, SPPoint*** siftDB, int numO
 
 
 SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures, SPConfig config, SP_CONFIG_MSG* msg) {
+	if (allFeaturesArr==NULL || numOfAllFeatures<1 || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
 	SP_KD_TREE_SPLIT_METHOD splitMethod = spConfigGetKDTreeSplitMethod(config ,msg);
 //	printf("SPLIT METHOD: %d\n",splitMethod );
 //	fflush(NULL);
@@ -142,6 +157,10 @@ SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures
 	SPKDTreeNode* featuresTree = spKDTreeBuild(allFeaturesArr, numOfAllFeatures, dim, splitMethod);
 //	spLoggerPrintInfo("BUILT FEATS TREE SUCCESS");
 //	fflush(NULL);
+	if (featuresTree==NULL) {
+		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
 	return featuresTree;
 }
 
@@ -155,8 +174,13 @@ int getQueryPath(char* path) {
 	return 0;
 }
 
-int* countKClosestPerFeature(SPConfig config, SP_CONFIG_MSG* msg, SPKDTreeNode* featuresTree,
-		int numOfImgs, char* queryPath) {
+int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* queryPath,
+		SPConfig config, SP_CONFIG_MSG* msg) {
+	if (featuresTree==NULL || numOfImgs<1 || queryPath==NULL || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
 	int spKNN = spConfigGetKNN(config, msg);
 	int* counter = (int*)calloc(numOfImgs,sizeof(int));
 	SPBPQueue* bpq = spBPQueueCreate(spKNN);
@@ -209,9 +233,14 @@ int* countKClosestPerFeature(SPConfig config, SP_CONFIG_MSG* msg, SPKDTreeNode* 
 }
 
 BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs) {
+	if (counter==NULL || numOfImgs<1) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
 	BPQueueElement* queryClosestImages = (BPQueueElement*) malloc (numOfImgs*sizeof(BPQueueElement));
-	// return NULL if allocation error occurred
-	if (queryClosestImages == NULL) {
+	if (queryClosestImages == NULL) { //Allocation failure
+		spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
 		return NULL;
 	}
 
@@ -240,9 +269,14 @@ int cmpfunc(const void *a, const void *b) {
 }
 
 void showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg) {
+	if (queryPath==NULL || queryClosestImages==NULL || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return;
+	}
+
 	ImageProc ip(config);
-	int numOfSimilarImages = spConfigGetNumOfSimilarImages(config, msg);
 	char imagePath[STR_MAX_LENGTH+1] = {'\0'};
+	int numOfSimilarImages = spConfigGetNumOfSimilarImages(config, msg);
 
 	if(spConfigMinimalGui(config, msg)) { // Minimal GUI
 		for(int i=0; i<numOfSimilarImages; i++) {

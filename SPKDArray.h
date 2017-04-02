@@ -85,18 +85,6 @@ SPKDArray* spKDArrayAlloc(SPPoint** points, int n, int dim);
 int spDKArrayPointsCopy(SPPoint** dest, SPPoint** src, int n);
 
 /**
- * A comparator which compares two SPPoints by i-th coordinate.
- *
- * @param a - an element to compare (casted to BPQueueElement*)
- * @param b - an element to compare (casted to BPQueueElement*)
- *
- * @return
- * -1 if a.value<b.value, 1 if a.value>b.value
- * if a.value=b.value, returns -1 if a.index<b.index, 1 if a.index>b.index
- */
-int spKDArrayCompareValuesByDim(const void *a, const void *b);
-
-/**
  * Frees all memory allocation associated with a points array.
  *
  * @param arr 	- the points array to destroy

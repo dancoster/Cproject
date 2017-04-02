@@ -27,27 +27,19 @@ using namespace sp;
 #define ENTER_QUERY_PATH "Please enter a query image path:\n"
 #define BEST_CANDIDATES "Best candidates for - %s - are:\n"
 #define IMAGE_PROC_CREATED "Image Proc object created!\n"
-#define N_FEATURES_WARNING "Number of features doesn't match\n"
 #define COULDNT_BE_RESOLVED "couldn't be resolved\n"
-#define EXTRACTING_FEATS_IMG "Extracting features from images...\n"
-#define EXTRACTING_FEATS_FILE "Extracting features from files...\n"
+#define EXTRACTING_FEATS_ERROR "Extracting features from images failed\n"
 #define DONE_EXTRACTING "Done Extracting!\n"
 #define SIFT_DB_CREATED "Sift DB CREATED\n"
 #define SIFT_DB_DESTROY "Sift DB DESTROYED\n"
 #define ALL_FEATURES_ARRAY_CREATED "All Features Array CREATED\n"
 #define ALL_FEATURES_ARRAY_DESTROY "All Features Array DESTROYED\n"
+#define ALL_FEATURES_ARRAY_ERROR "All Features Array couldn't be created\n"
 #define KD_TREE_CREATED "KD Tree CREATED\n"
 #define KD_TREE_DESTROY "KD Tree DESTROYED\n"
 #define KD_TREE_ERROR "KD Tree couldn't be created\n"
-#define N_IMGS_L "Number of images"
-#define N_SIM "Number of similar images"
-#define N_FEATS "Number of features"
 #define FOUND_KNN "Found K nearest neighbors!"
 #define KNN_ERROR "Couldn't find K nearest neighbors\n"
-#define KNN_L "Number of K nearest neighbors"
-#define EXT_MODE_L "Extraction Mode"
-#define MINIMAL_GUI "Minimal GUI"
-#define SPLIT_METHOD "Split Method"
 #define Q_IMG_RECEIVED "Query Image received"
 #define Q_FEATS_EXT "Query Image Features Extracted"
 #define FOUND_CLOSEST_IMG "Found closest images"
@@ -63,8 +55,8 @@ int createAllFeaturesArray(SPPoint** allFeaturesArr, SPPoint*** siftDB, int numO
 
 SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures,SPConfig conf,SP_CONFIG_MSG* msg);
 
-int* countKClosestPerFeature(SPConfig config, SP_CONFIG_MSG* msg, SPKDTreeNode* featuresTree,
-		int numOfImgs, char* queryPath);
+int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* queryPath,
+		SPConfig config, SP_CONFIG_MSG* msg);
 
 BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs);
 

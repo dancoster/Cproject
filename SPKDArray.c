@@ -13,6 +13,18 @@ struct sp_kd_array_t {
 	int size;				// set to be the #cols of sortedMatrix
 };
 
+/**
+ * A comparator which compares two SPPoints by i-th coordinate.
+ *
+ * @param a - an element to compare (casted to BPQueueElement*)
+ * @param b - an element to compare (casted to BPQueueElement*)
+ *
+ * @return
+ * -1 if a.value < b.value, 1 if a.value > b.value
+ * if a.value == b.value, returns -1 if a.index < b.index, 1 if a.index > b.index
+ */
+int spKDArrayCompareValuesByDim(const void *a, const void *b);
+
 SPKDArray* spKDArrayInit(SPPoint** points, int n, int dim) {
 	if (points==NULL || n<=0 || dim<0) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
@@ -23,9 +35,8 @@ SPKDArray* spKDArrayInit(SPPoint** points, int n, int dim) {
 //	fflush(NULL);
 
 	SPKDArray* arr = spKDArrayAlloc(points, n, dim); // allocating memory for all array fields
-
-	if (arr == NULL) { //Allocation failure
-		spLoggerPrintError(ALLOCATION_ERROR, __FILE__, __func__, __LINE__);
+	if (arr == NULL) {
+		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
 	}
 
@@ -233,6 +244,7 @@ SPKDArray* spKDArrayAlloc(SPPoint** points, int n, int dim) {
 	// coping the points to arr->points
 	int successCopies = spDKArrayPointsCopy(arr->points, points, n);
 	if (successCopies != n) {
+		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 		spPoint1DDestroy(arr->points, successCopies); //destroying all the points until index i=successCopies
 		free(arr);
 		return NULL;

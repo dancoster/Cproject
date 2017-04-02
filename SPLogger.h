@@ -27,6 +27,7 @@
 #define STR_MAX_LENGTH 1024
 #define ALLOCATION_ERROR "Allocation error occurred\n"
 #define INVALID_ARGUMENTS_ERROR "one or more of function arguments is not valid\n"
+#define FUNCTION_ERROR "the function couldn't be complete\n"
 
 /** A type used to decide the level of the logger**/
 typedef enum sp_logger_level_t {
