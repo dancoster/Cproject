@@ -25,7 +25,7 @@ using namespace sp;
 #define FEAT_CANNOT_OPEN_FILE "The feat file couldn't be open\n"
 #define FEAT_WRITE_ERROR "Write to feat file failed\n"
 #define ENTER_QUERY_PATH "Please enter a query image path:\n"
-#define BEST_CAND "Best candidates for - %s - are:\n"
+#define BEST_CANDIDATES "Best candidates for - %s - are:\n"
 #define IMAGE_PROC_CREATED "Image Proc object created!\n"
 #define N_FEATURES_WARNING "Number of features doesn't match\n"
 #define COULDNT_BE_RESOLVED "couldn't be resolved\n"
@@ -56,7 +56,7 @@ using namespace sp;
 #define EXITING "Exiting…\n"
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be complete\n"
 
-int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
+int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg);
 
 int createAllFeaturesArray(SPPoint** allFeaturesArr, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage);
@@ -68,9 +68,11 @@ int* countKClosestPerFeature(SPConfig config, SP_CONFIG_MSG* msg, SPKDTreeNode* 
 
 BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs);
 
-void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
-		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree);
-
 int getQueryPath(char* path);
+
+void showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg);
+
+void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
+		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree);
 
 #endif /* MAIN_AUX_H_ */

@@ -6,10 +6,10 @@
 
 int cmpfunc(const void *a, const void *b);
 
-int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
+int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg) {
 	ImageProc ip(config);
-	char path[STR_MAX_LENGTH] = {'\0'};
+	char path[STR_MAX_LENGTH+1] = {'\0'};
 	FILE* featsFile=NULL;
 	//check allocation error
 	if(path==NULL) {
@@ -239,7 +239,27 @@ int cmpfunc(const void *a, const void *b) {
 	  }
 }
 
-void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
+void showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg) {
+	ImageProc ip(config);
+	int numOfSimilarImages = spConfigGetNumOfSimilarImages(config, msg);
+	char imagePath[STR_MAX_LENGTH+1] = {'\0'};
+
+	if(spConfigMinimalGui(config, msg)) { // Minimal GUI
+		for(int i=0; i<numOfSimilarImages; i++) {
+			spConfigGetImagePath(imagePath, config, queryClosestImages[i].index);
+			ip.showImage(imagePath);
+		}
+	}
+	else { // NON-Minimal GUI
+		printf(BEST_CANDIDATES, queryPath);
+		for(int i=0; i<numOfSimilarImages; i++) {
+			spConfigGetImagePath(imagePath, config, queryClosestImages[i].index);
+			printf("%s\n",imagePath);
+		}
+	}
+}
+
+void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
 		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree) {
 	bool onlyConfig = true;
 	if (siftDB != NULL) {
@@ -273,4 +293,3 @@ void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFea
 
 	printf(EXITING);
 }
-

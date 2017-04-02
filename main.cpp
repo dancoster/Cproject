@@ -135,13 +135,7 @@ int main(int argc, char* argv[]) {
 			}
 
 		BPQueueElement* queryClosestImages = sortFeaturesCount(counter, numOfImgs);
-		printf(BEST_CAND, "query");
-		for(int i=0; i<spConfigGetNumOfSimilarImages(config, &msg); i++)
-		{
-			printf("%d ",queryClosestImages[i].index);
-		}
-		printf("\n");
-		fflush(NULL);
+		showResults(queryPath, queryClosestImages, config, &msg);
 		free(queryClosestImages);
 		free(counter);
 
