@@ -76,10 +76,6 @@ int main(int argc, char* argv[]) {
 		}
 		int numOfAllFeatures=0;
 		//creating the sift Database
-<<<<<<< HEAD
-
-=======
->>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 		//if unsuccessful terminate program
 		if (extractFeatures(siftDB, numOfImgs, numOfFeaturesPerImage, &numOfAllFeatures, config, &msg) == -1) {
 			spLoggerPrintError(EXTRACTING_FEATS_ERROR,__FILE__,__func__,__LINE__);

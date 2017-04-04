@@ -99,7 +99,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 			*msg = spConfigGetFeatsPath(path, config ,i);
 
 			//insert image features from file to DB
-			siftDB[i] = readsFaturesFromFile(i, numOfFeaturesPerImage+i, config, path, pcaNumComp);
+			siftDB[i] = readsFeaturesFromFile(i, numOfFeaturesPerImage+i, config, path, pcaNumComp);
 			*numOfAllFeatures += numOfFeaturesPerImage[i];
 		}
 	}
@@ -227,7 +227,7 @@ BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs) {
 
 	return queryClosestImages;
 }
-SPPoint** readsFaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp){
+SPPoint** readsFeaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp){
 			//checks if the feats file is availble
 			if( access( path, F_OK ) == -1 ) {
 			    // file doesn't exist
