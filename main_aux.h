@@ -21,7 +21,8 @@ using namespace sp;
 #define LOGGER_ERROR "Logger couldn't be created\n"
 #define LOGGER_FILENAME "Logger Filename"
 #define LOGGER_LEVEL "Logger Level"
-#define IMAGE_PATH_ERROR "Image Path couldn't be resolved\n"
+#define IMG_PATH_ERROR "Image Path couldn't be resolved\n"
+#define FEATS_PATH_ERROR "Feats Path couldn't be resolved\n"
 #define FEAT_CANNOT_OPEN_FILE "The feat file couldn't be opened\n"
 #define FEAT_WRITE_ERROR "Write to feat file failed\n"
 #define FEAT_READ_ERROR "Read features file is failed\n"
@@ -45,7 +46,6 @@ using namespace sp;
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
 #define EXTRACTS_FEATURES "Extract the features from the files"
-#define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be completed\n"
 
 
 int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
