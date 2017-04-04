@@ -4,18 +4,28 @@
 #include <cstdio>
 #include <cstring>
 
+/**
+ * A comparator which compares two SPPoints by i-th coordinate.
+ *
+ * @param a - an element to compare (casted to BPQueueElement*)
+ * @param b - an element to compare (casted to BPQueueElement*)
+ *
+ * @return
+ * -1 if a.value > b.value, 1 if a.value < b.value
+ * if a.value == b.value, returns -1 if a.index < b.index, 1 if a.index > b.index
+ */
 int cmpfunc(const void *a, const void *b);
 
-int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
+int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg) {
-	ImageProc ip(config);
-	char path[STR_MAX_LENGTH] = {'\0'};
-	FILE* featsFile=NULL;
-	//check allocation error
-	if(path==NULL) {
-		spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
-		return -1;
+	if (siftDB==NULL || numOfImgs<1 || numOfFeaturesPerImage==NULL || numOfAllFeatures==NULL || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
 	}
+
+	ImageProc ip(config);
+	char path[STR_MAX_LENGTH+1] = {'\0'};
+	FILE* featsFile=NULL;
 
 	//extracting of sift features from images or from files
 	if (spConfigIsExtractionMode(config, msg)) { //extracting from images and saving to feats files
@@ -78,6 +88,7 @@ int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImag
 		fclose(featsFile);
 	}
 
+<<<<<<< HEAD
 	else //extracting from feats files
 	{
 		spLoggerPrintInfo(EXTRACTS_FEATURES);
@@ -93,6 +104,48 @@ int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImag
 			*numOfAllFeatures += numOfFeaturesPerImage[i];
 		}
 	}
+=======
+//	else //extracting from feats files
+//	{
+//		int pcaNumComp = spConfigGetPCADim(config, msg);
+//		//getting features from files
+//		for (int i=0; i<numOfImgs; i++) {
+//
+//			//get current image path
+//			*msg = spConfigGetFeatsPath(path, config ,i);
+//
+//			//checks if the feats file is availble
+//			if( access( path, F_OK ) == -1 ) {
+//			    // file doesn't exist
+//				spLoggerPrintError(FEATS_ERROR,__FILE__,__func__,__LINE__);
+//				return (-1);
+//			}
+//
+//			FILE* featuresFile = fopen(path,"r");
+//
+//			//checks if read failed
+//			if (featuresFile == NULL){
+//				spLoggerPrintError(FEAT_READ_ERROR,__FILE__,__func__,__LINE__);
+//				fclose(featuresFile);
+//			}
+//
+//			//read features
+//
+////			SPPoint* featuresArray = malloc(sizeof(SPPoint) * *numOfFeaturesPerImage);
+//			//??add malloc faliure
+//
+//			for(int i = 0; i < *numOfFeaturesPerImage; i++){
+//
+////				double* valuesArray = (double*) malloc(sizeof * pcaNumComp);
+////				featuresArray[i] = spPointCreate(valuesArray, pcaNumComp, i); // create a new point with the i-th feature
+////				free(data);
+//			}
+//
+//
+//			//get current image path
+//		}
+//	}
+>>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 
 	return 1;
 }
@@ -109,6 +162,11 @@ int createAllFeaturesArray(SPPoint** allFeaturesArr, SPPoint*** siftDB, int numO
 
 
 SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures, SPConfig config, SP_CONFIG_MSG* msg) {
+	if (allFeaturesArr==NULL || numOfAllFeatures<1 || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
 	SP_KD_TREE_SPLIT_METHOD splitMethod = spConfigGetKDTreeSplitMethod(config ,msg);
 //	printf("SPLIT METHOD: %d\n",splitMethod );
 //	fflush(NULL);
@@ -117,6 +175,10 @@ SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures
 	SPKDTreeNode* featuresTree = spKDTreeBuild(allFeaturesArr, numOfAllFeatures, dim, splitMethod);
 //	spLoggerPrintInfo("BUILT FEATS TREE SUCCESS");
 //	fflush(NULL);
+	if (featuresTree==NULL) {
+		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
 	return featuresTree;
 }
 
@@ -130,8 +192,13 @@ int getQueryPath(char* path) {
 	return 0;
 }
 
-int* countKClosestPerFeature(SPConfig config, SP_CONFIG_MSG* msg, SPKDTreeNode* featuresTree,
-		int numOfImgs, char* queryPath) {
+int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* queryPath,
+		SPConfig config, SP_CONFIG_MSG* msg) {
+	if (featuresTree==NULL || numOfImgs<1 || queryPath==NULL || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
 	int spKNN = spConfigGetKNN(config, msg);
 	int* counter = (int*)calloc(numOfImgs,sizeof(int));
 	SPBPQueue* bpq = spBPQueueCreate(spKNN);
@@ -184,9 +251,14 @@ int* countKClosestPerFeature(SPConfig config, SP_CONFIG_MSG* msg, SPKDTreeNode* 
 }
 
 BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs) {
+	if (counter==NULL || numOfImgs<1) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
 	BPQueueElement* queryClosestImages = (BPQueueElement*) malloc (numOfImgs*sizeof(BPQueueElement));
-	// return NULL if allocation error occurred
-	if (queryClosestImages == NULL) {
+	if (queryClosestImages == NULL) { //Allocation failure
+		spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
 		return NULL;
 	}
 
@@ -280,7 +352,32 @@ int cmpfunc(const void *a, const void *b) {
 	  }
 }
 
-void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
+void showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg) {
+	if (queryPath==NULL || queryClosestImages==NULL || config==NULL || msg==NULL) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+		return;
+	}
+
+	ImageProc ip(config);
+	char imagePath[STR_MAX_LENGTH+1] = {'\0'};
+	int numOfSimilarImages = spConfigGetNumOfSimilarImages(config, msg);
+
+	if(spConfigMinimalGui(config, msg)) { // Minimal GUI
+		for(int i=0; i<numOfSimilarImages; i++) {
+			spConfigGetImagePath(imagePath, config, queryClosestImages[i].index);
+			ip.showImage(imagePath);
+		}
+	}
+	else { // NON-Minimal GUI
+		printf(BEST_CANDIDATES, queryPath);
+		for(int i=0; i<numOfSimilarImages; i++) {
+			spConfigGetImagePath(imagePath, config, queryClosestImages[i].index);
+			printf("%s\n",imagePath);
+		}
+	}
+}
+
+void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
 		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree) {
 	bool onlyConfig = true;
 	if (siftDB != NULL) {
@@ -314,4 +411,3 @@ void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFea
 
 	printf(EXITING);
 }
-

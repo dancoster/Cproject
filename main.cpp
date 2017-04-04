@@ -28,7 +28,6 @@ int main(int argc, char* argv[]) {
 
 	if (msg != SP_CONFIG_SUCCESS) { // create fail, spLogger msg inside
 		printf(CONFIG_ERROR);
-//		spConfigDestroy(config);
 		terminate(config,NULL,0,NULL,NULL,0,NULL);
 		return -1;
 	}
@@ -42,7 +41,6 @@ int main(int argc, char* argv[]) {
 	char* logger_filename = spConfigGetLoggerFilename(config, &msg);
 	if (msg != SP_CONFIG_SUCCESS) {
 		printf("%s %s\n", LOGGER_FILENAME, COULDNT_BE_RESOLVED);
-//		spConfigDestroy(config);
 		terminate(config,NULL,0,NULL,NULL,0,NULL);
 		return -1;
 	}
@@ -50,7 +48,6 @@ int main(int argc, char* argv[]) {
 	SP_LOGGER_LEVEL logger_level = spConfigGetLoggerLevel(config, &msg);
 	if (msg != SP_CONFIG_SUCCESS) {
 		printf("%s %s\n", LOGGER_LEVEL, COULDNT_BE_RESOLVED);
-//		spConfigDestroy(config);
 		terminate(config,NULL,0,NULL,NULL,0,NULL);
 		return -1;
 	}
@@ -60,7 +57,6 @@ int main(int argc, char* argv[]) {
 	}
 	if (spLoggerCreate(logger_filename, logger_level) != SP_LOGGER_SUCCESS) {
 		printf("%s\n", LOGGER_ERROR);
-//		spConfigDestroy(config);
 		terminate(config,NULL,0,NULL,NULL,0,NULL);
 		return -1;
 	}
@@ -80,9 +76,13 @@ int main(int argc, char* argv[]) {
 		}
 		int numOfAllFeatures=0;
 		//creating the sift Database
+<<<<<<< HEAD
 
+=======
+>>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 		//if unsuccessful terminate program
 		if (extractFeatures(siftDB, numOfImgs, numOfFeaturesPerImage, &numOfAllFeatures, config, &msg) == -1) {
+			spLoggerPrintError(EXTRACTING_FEATS_ERROR,__FILE__,__func__,__LINE__);
 			terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,NULL,0,NULL);
 			return -1;
 		}
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 			spLoggerPrintInfo(ALL_FEATURES_ARRAY_CREATED);
 		}
 		else {
-			spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
+			spLoggerPrintError(ALL_FEATURES_ARRAY_ERROR,__FILE__,__func__,__LINE__);
 			terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,NULL,0,NULL);
 			return -1;
 		}
@@ -108,12 +108,9 @@ int main(int argc, char* argv[]) {
 
 		//build KDtree from all features
 		SPKDTreeNode* featuresTree = buildFeaturesKDTree(allFeaturesArr, numOfAllFeatures, config, &msg);
-//		return 0;
-		//if unsuccessfull terminate program
-		if(featuresTree==NULL) {
+		if(featuresTree==NULL) { //build failed
 			spLoggerPrintError(KD_TREE_ERROR,__FILE__,__func__,__LINE__);
 			terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,allFeaturesArr,numOfAllFeatures,featuresTree);
-//			spLoggerDestroy();
 			return -1;
 		}
 		spLoggerPrintInfo(KD_TREE_CREATED);
@@ -123,11 +120,10 @@ int main(int argc, char* argv[]) {
 		if (getQueryPath(queryPath) < 0) {
 			spLoggerPrintError(COULDNT_BE_RESOLVED,__FILE__,__func__,__LINE__);
 			terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,allFeaturesArr,numOfAllFeatures,featuresTree);
-//			spLoggerDestroy();
 			return -1;
 		}
 
-		int* counter = countKClosestPerFeature(config, &msg, featuresTree, numOfImgs, queryPath);
+		int* counter = countKClosestPerFeature(featuresTree, numOfImgs, queryPath, config, &msg);
 		if (counter == NULL) {
 			spLoggerPrintError(COUNT_K_CLOSEST_ERROR,__FILE__,__func__,__LINE__);
 			terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,allFeaturesArr,numOfAllFeatures,featuresTree);
@@ -135,13 +131,7 @@ int main(int argc, char* argv[]) {
 			}
 
 		BPQueueElement* queryClosestImages = sortFeaturesCount(counter, numOfImgs);
-		printf(BEST_CAND, "query");
-		for(int i=0; i<spConfigGetNumOfSimilarImages(config, &msg); i++)
-		{
-			printf("%d ",queryClosestImages[i].index);
-		}
-		printf("\n");
-		fflush(NULL);
+		showResults(queryPath, queryClosestImages, config, &msg);
 		free(queryClosestImages);
 		free(counter);
 
@@ -154,8 +144,6 @@ int main(int argc, char* argv[]) {
 //		return 1;
 //	}
 	terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,allFeaturesArr,numOfAllFeatures,featuresTree);
-	fflush(NULL);
-	printf("===========================END===========================\n");
 	fflush(NULL);
 	return 0;
 }

@@ -19,6 +19,7 @@ SPKDTreeNode* spKDTreeBuild(SPPoint** points, int size, int dim, SP_KD_TREE_SPLI
 	}
 	SPKDArray* arr = spKDArrayInit(points, size, dim);
 	if (arr == NULL) { // spLogger msg inside
+		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
 	}
 //	spLoggerPrintInfo("SPKDArray INIT of tree SUCCESS");
@@ -32,6 +33,10 @@ SPKDTreeNode* spKDTreeBuild(SPPoint** points, int size, int dim, SP_KD_TREE_SPLI
 
 	SPKDTreeNode* result = spKDTreeNodeCreate(arr, splitDim, splitMethod); // spLogger msg inside
 	spKDArrayDestroy(arr);
+	if (result==NULL) {
+		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
+		return NULL;
+	}
 //	spLoggerPrintInfo("spKDTreeBuild SUCCESS\n");
 	return result;
 }

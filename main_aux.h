@@ -12,7 +12,7 @@ using namespace sp;
 
 #define DEFAULT_CONFIG_FILENAME "spcbir.config"
 #define INVALID_COMMAND_LINE_ERROR "Invalid command line : use -c %s\n"
-#define CONFIG_CANNOT_OPEN_FILE "The %s configuration file %s couldn't be open\n"
+#define CONFIG_CANNOT_OPEN_FILE "The %s configuration file %s couldn't be opened\n"
 #define CONFIG_CREATED "Config CREATED\n"
 #define CONFIG_DESTROY "Config DESTROYED\n"
 #define CONFIG_ERROR "Config couldn't be created\n"
@@ -22,62 +22,59 @@ using namespace sp;
 #define LOGGER_FILENAME "Logger Filename"
 #define LOGGER_LEVEL "Logger Level"
 #define IMAGE_PATH_ERROR "Image Path couldn't be resolved\n"
-#define FEAT_CANNOT_OPEN_FILE "The feat file couldn't be open\n"
+#define FEAT_CANNOT_OPEN_FILE "The feat file couldn't be opened\n"
 #define FEAT_WRITE_ERROR "Write to feat file failed\n"
 #define FEAT_READ_ERROR "Read features file is failed\n"
 #define ENTER_QUERY_PATH "Please enter a query image path:\n"
-#define BEST_CAND "Best candidates for - %s - are:\n"
-#define IMAGE_PROC_CREATED "Image Proc object created!\n"
-#define N_FEATURES_WARNING "Number of features doesn't match\n"
+#define BEST_CANDIDATES "Best candidates for - %s - are:\n"
 #define COULDNT_BE_RESOLVED "couldn't be resolved\n"
-#define EXTRACTING_FEATS_IMG "Extracting features from images...\n"
-#define EXTRACTING_FEATS_FILE "Extracting features from files...\n"
-#define DONE_EXTRACTING "Done Extracting!\n"
+#define EXTRACTING_FEATS_ERROR "Extracting features from images failed\n"
 #define SIFT_DB_CREATED "Sift DB CREATED\n"
 #define SIFT_DB_DESTROY "Sift DB DESTROYED\n"
 #define ALL_FEATURES_ARRAY_CREATED "All Features Array CREATED\n"
 #define ALL_FEATURES_ARRAY_DESTROY "All Features Array DESTROYED\n"
+#define ALL_FEATURES_ARRAY_ERROR "All Features Array couldn't be created\n"
 #define KD_TREE_CREATED "KD Tree CREATED\n"
 #define KD_TREE_DESTROY "KD Tree DESTROYED\n"
 #define KD_TREE_ERROR "KD Tree couldn't be created\n"
-#define N_IMGS_L "Number of images"
-#define N_SIM "Number of similar images"
-#define N_FEATS "Number of features"
-#define FOUND_KNN "Found K nearest neighbors!"
 #define KNN_ERROR "Couldn't find K nearest neighbors\n"
-#define KNN_L "Number of K nearest neighbors"
-#define EXT_MODE_L "Extraction Mode"
-#define MINIMAL_GUI "Minimal GUI"
-#define SPLIT_METHOD "Split Method"
-#define Q_IMG_RECEIVED "Query Image received"
-#define Q_FEATS_EXT "Query Image Features Extracted"
-#define FOUND_CLOSEST_IMG "Found closest images"
-#define QUERY_SUCCESS "Query loop ended successfully!"
 #define TERMINATE "<>"
 #define EXITING "Exiting…\n"
+<<<<<<< HEAD
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be complete\n"
 #define FEATS_ERROR "There is no feats for these image"
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
 #define EXTRACTS_FEATURES "Extract the features from the files"
+=======
+#define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be completed\n"
+>>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 
-int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
+int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg);
 
 int createAllFeaturesArray(SPPoint** allFeaturesArr, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage);
 
 SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures,SPConfig conf,SP_CONFIG_MSG* msg);
 
-int* countKClosestPerFeature(SPConfig config, SP_CONFIG_MSG* msg, SPKDTreeNode* featuresTree,
-		int numOfImgs, char* queryPath);
+int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* queryPath,
+		SPConfig config, SP_CONFIG_MSG* msg);
 
 BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs);
 
+<<<<<<< HEAD
 void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
 		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree);
 
 SPPoint** readsFaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp);
 
+=======
+>>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 int getQueryPath(char* path);
+
+void showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg);
+
+void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
+		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree);
 
 #endif /* MAIN_AUX_H_ */
