@@ -21,7 +21,8 @@ using namespace sp;
 #define LOGGER_ERROR "Logger couldn't be created\n"
 #define LOGGER_FILENAME "Logger Filename"
 #define LOGGER_LEVEL "Logger Level"
-#define IMAGE_PATH_ERROR "Image Path couldn't be resolved\n"
+#define IMG_PATH_ERROR "Image Path couldn't be resolved\n"
+#define FEATS_PATH_ERROR "Feats Path couldn't be resolved\n"
 #define FEAT_CANNOT_OPEN_FILE "The feat file couldn't be opened\n"
 #define FEAT_WRITE_ERROR "Write to feat file failed\n"
 #define FEAT_READ_ERROR "Read features file is failed\n"
@@ -41,11 +42,14 @@ using namespace sp;
 #define TERMINATE "<>"
 #define EXITING "Exiting…\n"
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be complete\n"
+#define SORT_FEATURES_COUNT_ERROR "the function sortFeaturesCount couldn't be complete\n"
 #define FEATS_ERROR "There is no feats for these image"
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
 #define EXTRACTS_FEATURES "Extract the features from the files"
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be completed\n"
+
+
 
 int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg);
@@ -62,7 +66,7 @@ BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs);
 void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
 		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree);
 
-SPPoint** readsFaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp);
+SPPoint** readsFeaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp);
 
 int getQueryPath(char* path);
 
