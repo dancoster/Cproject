@@ -47,7 +47,6 @@ using namespace sp;
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
 #define EXTRACTS_FEATURES "Extract the features from the files"
-#define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be completed\n"
 
 
 
