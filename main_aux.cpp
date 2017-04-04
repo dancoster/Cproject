@@ -80,42 +80,17 @@ int extractFeatures (SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImag
 
 	else //extracting from feats files
 	{
+		spLoggerPrintInfo(EXTRACTS_FEATURES);
 		int pcaNumComp = spConfigGetPCADim(config, msg);
+
 		//getting features from files
 		for (int i=0; i<numOfImgs; i++) {
-
 			//get current image path
 			*msg = spConfigGetFeatsPath(path, config ,i);
 
-			//checks if the feats file is availble
-			if( access( path, F_OK ) == -1 ) {
-			    // file doesn't exist
-				spLoggerPrintError(FEATS_ERROR,__FILE__,__func__,__LINE__);
-				return (-1);
-			}
-
-			FILE* featuresFile = fopen(path,"r");
-
-			//checks if read failed
-			if (featuresFile == NULL){
-				spLoggerPrintError(FEAT_READ_ERROR,__FILE__,__func__,__LINE__);
-				fclose(featuresFile);
-			}
-
-			//read features
-
-//			SPPoint* featuresArray = malloc(sizeof(SPPoint) * *numOfFeaturesPerImage);
-			//??add malloc faliure
-
-			for(int i = 0; i < *numOfFeaturesPerImage; i++){
-
-//				double* valuesArray = (double*) malloc(sizeof * pcaNumComp);
-//				featuresArray[i] = spPointCreate(valuesArray, pcaNumComp, i); // create a new point with the i-th feature
-//				free(data);
-			}
-
-
-			//get current image path
+			//insert image features from file to DB
+			siftDB[i] = readsFaturesFromFile(i, numOfFeaturesPerImage+i, config, path, pcaNumComp);
+			*numOfAllFeatures += numOfFeaturesPerImage[i];
 		}
 	}
 
@@ -223,6 +198,72 @@ BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs) {
 
 	return queryClosestImages;
 }
+SPPoint** readsFaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp){
+			//checks if the feats file is availble
+			if( access( path, F_OK ) == -1 ) {
+			    // file doesn't exist
+				spLoggerPrintError(FEATS_ERROR,__FILE__,__func__,__LINE__);
+				return NULL;
+			}
+			//read values from file
+			FILE* featuresFile;
+			featuresFile = fopen(path,"r");
+
+			//checks if read failed
+			if (featuresFile == NULL){
+				spLoggerPrintError(FEAT_READ_ERROR,__FILE__,__func__,__LINE__);
+				fclose(featuresFile);
+			}
+
+			//detect the number of feature of image imgIndex
+			int readFeatures = fread(numFeatures, sizeof(int), 1, featuresFile);
+			if (readFeatures != 1){
+				spLoggerPrintError(NUM_FEATS_READING_ERROR,__FILE__,__func__,__LINE__);
+				fclose(featuresFile);
+			}
+			printf("number of features %d\n", numFeatures[1]);
+			//read features
+
+			SPPoint** featuresArray;
+			featuresArray = (SPPoint**) malloc((*numFeatures)*sizeof(SPPoint*));
+
+			for (int j =0 ; j < (*numFeatures); j++ ){
+				double *tempArray= (double *) malloc(sizeof(double)*pcaNumComp);
+//				for (int t =0; t <pcaNumComp; t++){
+//					tempArray[t] = t;
+//					printf("pre readValues: %f", tempArray[t]);
+//				}
+				int readValues = fread(tempArray, sizeof(double), pcaNumComp, featuresFile);
+					printf("ValuereadValues: %d\n", readValues);
+					printf("%s\n", path);
+				for (int t =0; t <pcaNumComp; t++){
+					printf("post readValues: %f\n", tempArray[t]);
+				}
+//				printf("%f", tempArray[0]);
+
+				//malloc failure in read readValues
+				if (readValues != pcaNumComp){
+					spLoggerPrintError(FEATS_READING_ERROR,__FILE__,__func__,__LINE__);
+					free(tempArray);
+					break;
+				}
+				featuresArray[j] = spPointCreate(tempArray, pcaNumComp, imgIndex);
+				free(tempArray);
+
+				//malloc fail in featuresArray
+				if(featuresArray[imgIndex] == NULL){
+					spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
+					free(featuresArray);
+					break;
+				}
+			}
+
+			fclose(featuresFile);
+			return(featuresArray);
+			//TODO: add malloc faliure
+
+		}
+
 
 int cmpfunc(const void *a, const void *b) {
 	BPQueueElement* e1 = (BPQueueElement*)a; // casting pointer types
