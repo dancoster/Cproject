@@ -42,6 +42,7 @@ using namespace sp;
 #define TERMINATE "<>"
 #define EXITING "Exiting…\n"
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be complete\n"
+#define SORT_FEATURES_COUNT_ERROR "the function sortFeaturesCount couldn't be complete\n"
 #define FEATS_ERROR "There is no feats for these image"
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"

@@ -185,9 +185,11 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 //	printf("%d ",nFeaturesQuery);
 //	fflush(NULL);
 
+	// searching for KNN points for each query feature
 	for(int i=0; i<nFeaturesQuery; i++) {
 //		printf("QUERY[%d] point=(%d)\n",i,spPointGetIndex(querySift[i]));
 //		fflush(NULL);
+		// getting the KNN into the bpq
 		if (spKDTreeNodeGetKNN(featuresTree, bpq, querySift[i]) == -1) { // search failed
 			free(counter);
 			spPoint1DDestroy(querySift, nFeaturesQuery);
@@ -198,6 +200,7 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 		}
 //		printf("PASS 2\n");
 //		fflush(NULL);
+		// counting which images the KNN points belong to
 		for(int j=0; j<spKNN; j++) {
 			spBPQueuePeek(bpq, element);
 			spBPQueueDequeue(bpq);
@@ -206,6 +209,7 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 	}
 //	printf("PASS 3\n");
 //	fflush(NULL);
+	// free allocations
 	spPoint1DDestroy(querySift, nFeaturesQuery);
 	spBPQueueDestroy(bpq);
 	free(element);
@@ -356,6 +360,7 @@ void showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig c
 
 void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
 		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree) {
+	printf(EXITING);
 	bool onlyConfig = true;
 	if (siftDB != NULL) {
 		for (int i=0; i< numOfImgs; i++) {
@@ -385,6 +390,4 @@ void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeat
 		spLoggerDestroy();
 		printf(LOGGER_DESTROY);
 	}
-
-	printf(EXITING);
 }
