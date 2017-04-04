@@ -46,7 +46,6 @@ using namespace sp;
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
 #define EXTRACTS_FEATURES "Extract the features from the files"
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be completed\n"
->>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 
 int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg);
