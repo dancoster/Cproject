@@ -245,14 +245,10 @@ SPPoint** readsFaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, 
 			}
 
 			//detect the number of feature of image imgIndex
-			int readFeatures = fread(numFeatures, sizeof(int), 1, featuresFile);
-			if (readFeatures != 1){
-				spLoggerPrintError(NUM_FEATS_READING_ERROR,__FILE__,__func__,__LINE__);
-				fclose(featuresFile);
-			}
-			printf("number of features %d\n", numFeatures[1]);
-			//read features
+			fscanf(featuresFile, " %d", &numFeatures[imgIndex]);
+			printf("number of features %d\n", numFeatures[imgIndex]);
 
+			//read features
 			SPPoint** featuresArray;
 			featuresArray = (SPPoint**) malloc((*numFeatures)*sizeof(SPPoint*));
 
@@ -262,36 +258,45 @@ SPPoint** readsFaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, 
 //					tempArray[t] = t;
 //					printf("pre readValues: %f", tempArray[t]);
 //				}
-				int readValues = fread(tempArray, sizeof(double), pcaNumComp, featuresFile);
-					printf("ValuereadValues: %d\n", readValues);
-					printf("%s\n", path);
-				for (int t =0; t <pcaNumComp; t++){
-					printf("post readValues: %f\n", tempArray[t]);
+
+				for (int i=0; i<pcaNumComp; i++){
+					printf("post readValues: %lf\n");
+
+					if(fscanf(featuresFile, " %lf", tempArray+i) <= 0){
+						spLoggerPrintError(FEATS_READING_ERROR,__FILE__,__func__,__LINE__);
+						free(featuresArray);
+						free(tempArray);
+						fclose(featuresFile);
+						return NULL;
+					}
+					featuresArray[i] = spPointCreate(tempArray, pcaNumComp, imgIndex);
+					free(tempArray);
+
+					//malloc fail in featuresArray
+					if(featuresArray[i] == NULL){
+						spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
+						free(featuresArray);
+						break;
+					}
 				}
+//				int readValues = fread(tempArray, sizeof(double), pcaNumComp, featuresFile);
+//					printf("ValuereadValues: %d\n", readValues);
+//					printf("%s\n", path);
+
 //				printf("%f", tempArray[0]);
 
 				//malloc failure in read readValues
-				if (readValues != pcaNumComp){
-					spLoggerPrintError(FEATS_READING_ERROR,__FILE__,__func__,__LINE__);
-					free(tempArray);
-					break;
-				}
-				featuresArray[j] = spPointCreate(tempArray, pcaNumComp, imgIndex);
-				free(tempArray);
-
-				//malloc fail in featuresArray
-				if(featuresArray[imgIndex] == NULL){
-					spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
-					free(featuresArray);
-					break;
-				}
-			}
+//				if (readValues != pcaNumComp){
+//					spLoggerPrintError(FEATS_READING_ERROR,__FILE__,__func__,__LINE__);
+//					free(tempArray);
+//					break;
 
 			fclose(featuresFile);
 			return(featuresArray);
 			//TODO: add malloc faliure
 
 		}
+}
 
 
 int cmpfunc(const void *a, const void *b) {
