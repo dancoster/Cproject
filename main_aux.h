@@ -40,13 +40,11 @@ using namespace sp;
 #define KNN_ERROR "Couldn't find K nearest neighbors\n"
 #define TERMINATE "<>"
 #define EXITING "Exiting…\n"
-<<<<<<< HEAD
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be complete\n"
 #define FEATS_ERROR "There is no feats for these image"
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
 #define EXTRACTS_FEATURES "Extract the features from the files"
-=======
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be completed\n"
 >>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 
@@ -62,14 +60,11 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 
 BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs);
 
-<<<<<<< HEAD
 void terminate (SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage,
 		SPPoint** allFeaturesArr, int numOfAllFeatures, SPKDTreeNode* featuresTree);
 
 SPPoint** readsFaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp);
 
-=======
->>>>>>> cab8b047f89b21862274d821346e61fdcb049e90
 int getQueryPath(char* path);
 
 void showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg);
