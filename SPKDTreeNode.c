@@ -25,7 +25,7 @@ SPKDTreeNode* spKDTreeBuild(SPPoint** points, int size, int dim, SP_KD_TREE_SPLI
 //	spLoggerPrintInfo("SPKDArray INIT of tree SUCCESS");
 //	printf("size of array: %d\n", spKDArrayGetSize(arr));
 //	spKDArrayPrintMatrix(arr);
-//	fflush(NULL);
+	fflush(NULL);
 
 	int splitDim = spKDTreeNodeSplitByDim(arr, 0, splitMethod);
 //	printf("SPLIT DIM: %d\n", splitDim);
@@ -33,7 +33,7 @@ SPKDTreeNode* spKDTreeBuild(SPPoint** points, int size, int dim, SP_KD_TREE_SPLI
 
 	SPKDTreeNode* result = spKDTreeNodeCreate(arr, splitDim, splitMethod); // spLogger msg inside
 	spKDArrayDestroy(arr);
-	if (result==NULL) {
+	if (result == NULL) {
 		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
 	}
@@ -154,7 +154,8 @@ int spKDTreeNodeSplitByDim(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHOD spli
 	}
 	if (splitMethod == RANDOM) {
 //		printf("ENTERED RANDOM\n");
-		return (rand() % spKDArrayGetDim(arr)); // spLogger msg inside
+		fflush(NULL);
+		return (rand() % spKDArrayGetDim(arr) + 1); // spLogger msg inside
 	}
 	if (splitMethod == INCREMENTAL) {
 //		printf("ENTERED INCREMENTAL\n");

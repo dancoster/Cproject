@@ -164,8 +164,10 @@ SP_CONFIG_MSG spConfigGetImagePath(char* imagePath, const SPConfig config, int i
 	if (index >= config->spNumOfImages)
 		return SP_CONFIG_INDEX_OUT_OF_RANGE;
 
-	sprintf(imagePath, "%s%s%d%s", config->spImagesDirectory,
-			config->spImagesPrefix, index, config->spImagesSuffix);
+	if (sprintf(imagePath, "%s%s%d%s", config->spImagesDirectory,
+			config->spImagesPrefix, index, config->spImagesSuffix) < 0) {
+		return SP_CONFIG_INDEX_OUT_OF_RANGE;
+	}
 	return SP_CONFIG_SUCCESS;
 }
 
@@ -173,7 +175,9 @@ SP_CONFIG_MSG spConfigGetPCAPath(char* pcaPath, const SPConfig config) {
 	if (pcaPath == NULL || config == NULL)
 		return SP_CONFIG_INVALID_ARGUMENT;
 
-    sprintf(pcaPath, "%s%s", config->spImagesDirectory, config->spPCAFilename);
+    if (sprintf(pcaPath, "%s%s", config->spImagesDirectory, config->spPCAFilename) < 0) {
+    	return SP_CONFIG_INDEX_OUT_OF_RANGE;
+    }
     return SP_CONFIG_SUCCESS;
 }
 
@@ -233,8 +237,10 @@ SP_CONFIG_MSG spConfigGetFeatsPath(char* imagePath, SPConfig config, int index) 
 	if (index >= config->spNumOfImages)
 		return SP_CONFIG_INDEX_OUT_OF_RANGE;
 
-	sprintf(imagePath, "%s%s%d%s", config->spImagesDirectory,
-			config->spImagesPrefix, index, ".feats");
+	if (sprintf(imagePath, "%s%s%d%s", config->spImagesDirectory,
+			config->spImagesPrefix, index, ".feats") < 0) {
+		return SP_CONFIG_INDEX_OUT_OF_RANGE;
+	}
 	return SP_CONFIG_SUCCESS;
 }
 
@@ -277,18 +283,24 @@ void spConfigTerminate(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, SP_CONFIG_
 
 bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const char* filename, int* lineNumber) {
 	char line[STR_MAX_LENGTH+1], system_param[STR_MAX_LENGTH+1], val[STR_MAX_LENGTH+1], temp[STR_MAX_LENGTH+1];
-	char* token; //should I free it?
+	char* token;
 	while (fgets(line, STR_MAX_LENGTH+1, fp) != NULL) {
 		//check if the line is a comment or a blank line
-		sscanf (line, " %s", temp);
-		if (temp[0] == '#' || strcmp(line, "\n") == 0 || strcmp(line, "\r\n") == 0) {
-			(*lineNumber)++;;
-			continue;
+		if (sscanf (line, " %s", temp) == 1) {
+			if (temp[0] == '#' || strcmp(line, "\n") == 0 || strcmp(line, "\r\n") == 0) {
+				(*lineNumber)++;;
+				continue;
+			}
+		}
+		else {
+			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
+			free(token);
+			return false;
 		}
 
 		/* get the first token */
 		token = strtok(line, "=");
-		if (sscanf (token," %s %s",system_param, temp) > 1) {
+		if (sscanf (token," %s %s", system_param, temp) > 1) {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
 			free(token);
 			return false;
@@ -341,9 +353,17 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		}
 		if (strcmp(system_param, "spNumOfImages") == 0) {
 			if (isNumber(val)) {
-				config->spNumOfImages = atoi(val);
-				(*lineNumber)++;
-				continue;
+				int temp = atoi(val);
+				if (temp > 0) {
+					config->spNumOfImages = temp;
+					(*lineNumber)++;
+					continue;
+				}
+				else {
+					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
+					free(token);
+					return false;
+				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
@@ -359,6 +379,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 					(*lineNumber)++;
 					continue;
 				}
+				else {
+					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
+					free(token);
+					return false;
+				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
@@ -373,9 +398,17 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		}
 		if (strcmp(system_param, "spNumOfFeatures") == 0) {
 			if (isNumber(val)) {
-				config->spNumOfFeatures = atoi(val);
+				int temp = atoi(val);
+				if (temp > 0) {
+				config->spNumOfFeatures = temp;
 				(*lineNumber)++;
 				continue;
+				}
+				else {
+					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
+					free(token);
+					return false;
+				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
@@ -402,9 +435,17 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		}
 		if (strcmp(system_param, "spNumOfSimilarImages") == 0) {
 			if (isNumber(val)) {
-				config->spNumOfSimilarImages = atoi(val);
-				(*lineNumber)++;
-				continue;
+				int temp = atoi(val);
+				if (temp > 0) {
+					config->spNumOfSimilarImages = temp;
+					(*lineNumber)++;
+					continue;
+				}
+				else {
+					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
+					free(token);
+					return false;
+				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
@@ -412,7 +453,7 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				return false;
 			}
 		}
-		if (strcmp(system_param, "splineNumberDTreeSplitMethod") == 0) {
+		if (strcmp(system_param, "spKDTreeSplitMethod") == 0) {
 			if (strcmp(val, "RANDOM") == 0) {
 				config->spKDTreeSplitMethod = RANDOM;
 				(*lineNumber)++;
@@ -436,9 +477,17 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		}
 		if (strcmp(system_param, "spKNN") == 0) {
 			if (isNumber(val)) {
-				config->spKNN = atoi(val);
-				(*lineNumber)++;
-				continue;
+				int temp = atoi(val);
+				if (temp > 0) {
+					config->spKNN = temp;
+					(*lineNumber)++;
+					continue;
+				}
+				else {
+					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
+					free(token);
+					return false;
+				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
@@ -470,6 +519,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 					config->spLoggerLevel = temp;
 					(*lineNumber)++;
 					continue;
+				}
+				else {
+					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
+					free(token);
+					return false;
 				}
 			}
 			else {
@@ -503,9 +557,6 @@ void spConfigSetDefaultValues(SPConfig config) {
 	strcpy(config->spLoggerFilename, DEFAULT_LOGGER_FILENAME);
 
 	//str and int defaults:
-//	memset(config->spImagesDirectory, DEFAULT_STR2, sizeof(config->spImagesDirectory));
-//	memset(config->spImagesPrefix, DEFAULT_STR2, sizeof(config->spImagesPrefix));
-//	memset(config->spImagesSuffix, DEFAULT_STR2, sizeof(config->spImagesSuffix));
 	strcpy(config->spImagesDirectory, DEFAULT_STR);
 	strcpy(config->spImagesPrefix, DEFAULT_STR);
 	strcpy(config->spImagesSuffix, DEFAULT_STR);

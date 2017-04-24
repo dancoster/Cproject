@@ -18,7 +18,6 @@
 #define DEFAULT_LOGGER_FILENAME "stdout"
 #define DEFAULT_INT 0
 #define DEFAULT_STR ""
-#define DEFAULT_STR2 '\0'
 #define DEFAULT_CONFIG_FILE "spcbir.config"
 
 /**

@@ -91,7 +91,7 @@ SPKDArray** spKDArraySplit(SPKDArray* arr, int coor) {
 	SPPoint** arrLeft = (SPPoint**) (malloc(nLeft*sizeof(SPPoint*)));
 	SPPoint** arrRight = (SPPoint**) (malloc(nRight*sizeof(SPPoint*)));
 	SPKDArray** splittedArrays = (SPKDArray**) malloc(2*sizeof(SPKDArray*));
-	int cLeft=0, cRight=0; // counters for the indexes in left and right array splits
+	int cLeft=0, cRight=0; 		// counters for the indexes in left and right array splits
 	int* X = (int*) calloc(n, sizeof(int));
 	int* map = (int*) (calloc(n, sizeof(int)));
 
