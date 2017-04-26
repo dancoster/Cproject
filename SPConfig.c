@@ -313,10 +313,14 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 			free(token);
 			return false;
 		}
-		if (sscanf (token," %s %s",val, temp) > 1) {
+		int check = sscanf(token," %s %s",val, temp);
+		if (check > 1) {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
 			free(token);
 			return false;
+		}
+		else if (check == EOF) {
+			strcpy(val, "");
 		}
 
 		/* get the third token */
@@ -327,7 +331,7 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 			return false;
 		}
 
-		// searching which parameter is part1
+		// searching which parameter is system_param
 		if (strcmp(system_param, "spImagesDirectory") == 0) {
 			strcpy(config->spImagesDirectory, val);
 			(*lineNumber)++;
@@ -566,19 +570,19 @@ void spConfigSetDefaultValues(SPConfig config) {
 bool spConfigCheckVariablesInitialized(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const char* filename,
 		int lineNumber) {
 	if (strcmp(config->spImagesDirectory, DEFAULT_STR) == 0) {
-		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_DIR ,filename, lineNumber, 3, "spImagesDirectory");
+		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_DIR ,filename, lineNumber-1, 3, "spImagesDirectory");
 		return false;
 	}
 	if (strcmp(config->spImagesPrefix, DEFAULT_STR) == 0) {
-		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_PREFIX ,filename, lineNumber, 3, "spImagesPrefix");
+		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_PREFIX ,filename, lineNumber-1, 3, "spImagesPrefix");
 		return false;
 	}
 	if (strcmp(config->spImagesSuffix, DEFAULT_STR) == 0) {
-		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_SUFFIX ,filename, lineNumber, 3, "spImagesSuffix");
+		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_SUFFIX ,filename, lineNumber-1, 3, "spImagesSuffix");
 		return false;
 	}
 	if (config->spNumOfImages == DEFAULT_INT) {
-		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_NUM_IMAGES ,filename, lineNumber, 3, "spNumOfImages");
+		spConfigTerminate(config, fp, msg, SP_CONFIG_MISSING_NUM_IMAGES ,filename, lineNumber-1, 3, "spNumOfImages");
 		return false;
 	}
 	return true;
