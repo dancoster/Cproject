@@ -327,7 +327,7 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 			return false;
 		}
 
-		// searching which parameter is part1
+		// searching which parameter is system_param
 		if (strcmp(system_param, "spImagesDirectory") == 0) {
 			strcpy(config->spImagesDirectory, val);
 			(*lineNumber)++;
