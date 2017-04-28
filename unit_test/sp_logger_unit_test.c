@@ -72,7 +72,12 @@ static bool basicLoggerDebugTest() {
 
 //int main() {
 //	RUN_TEST(basicLoggerTest);
+//	printf("*********************************************\n");
 //	RUN_TEST(basicLoggerErrorTest);
+//	printf("*********************************************\n");
 //	RUN_TEST(basicLoggerDebugTest);
+//	printf("*********************************************\n");
+//	printf("test ok!");
 //	return 0;
 //}
+
