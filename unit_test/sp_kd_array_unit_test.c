@@ -126,26 +126,14 @@ bool SplittingTest(){
 	return true;
 }
 
-int main() {
-//	SPPoint** pointsArray =spKDArrayPoints();
-//	SPKDArray* testArray = spKDArrayInit(pointsArray, 5, 2);
-//	SPKDArray** splittedArrays = (SPKDArray**) malloc(2*sizeof(SPKDArray*));
-//
-//	splittedArrays = spKDArraySplit(testArray, 0);
-//	SPKDArray* rightArray = splittedArrays[LEFT];
-//	for (int i=0; i<3; i++) {
-//		printf("%d \n", spKDArrayGetSortedMatrix(rightArray)[1][i]);
-//	}
-//	printf("%d \n", spKDArrayGetSize(testArray));
-//	printf("%d \n", spKDArrayGetDim(testArray));
-
-	RUN_TEST(IntializationTest);
-	printf("*********************************************\n");
-	RUN_TEST(SortingTest);
-	printf("*********************************************\n");
-	RUN_TEST(SplittingTest);
-	printf("*********************************************\n");
-	printf("test ok!");
-	return 0;
-}
+//int main() {
+//	RUN_TEST(IntializationTest);
+//	printf("*********************************************\n");
+//	RUN_TEST(SortingTest);
+//	printf("*********************************************\n");
+//	RUN_TEST(SplittingTest);
+//	printf("*********************************************\n");
+//	printf("test ok!");
+//	return 0;
+//}
 
