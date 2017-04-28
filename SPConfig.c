@@ -313,14 +313,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 			free(token);
 			return false;
 		}
-		int check = sscanf(token," %s %s",val, temp);
-		if (check > 1) {
+
+		if (sscanf(token," %s %s",val, temp) != 1) {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
 			free(token);
 			return false;
-		}
-		else if (check == EOF) {
-			strcpy(val, "");
 		}
 
 		/* get the third token */
@@ -350,6 +347,9 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				continue;
 			}
 			else {
+				if (strcpy(val, "")){
+					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 2, NULL);
+				}
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 2, NULL);
 				free(token);
 				return false;
