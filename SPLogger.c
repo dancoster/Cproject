@@ -73,7 +73,7 @@ SP_LOGGER_MSG spLoggerPrintError(const char* msg, const char* file,
 		}
 	}
 	else {
-		return SP_LOGGER_UNDIFINED; //check which msg should be returned in that case...
+		return SP_LOGGER_SUCCESS;
 	}
 }
 
@@ -99,7 +99,7 @@ SP_LOGGER_MSG spLoggerPrintWarning(const char* msg, const char* file,
 		}
 	}
 	else {
-		return SP_LOGGER_UNDIFINED; //check which msg should be returned in that case (incorrect level)...
+		return SP_LOGGER_SUCCESS;
 	}
 }
 
@@ -123,7 +123,7 @@ SP_LOGGER_MSG spLoggerPrintInfo(const char* msg) {
 		}
 	}
 	else {
-		return SP_LOGGER_UNDIFINED; //check which msg should be returned in that case...
+		return SP_LOGGER_SUCCESS;
 	}
 }
 
@@ -147,7 +147,7 @@ SP_LOGGER_MSG spLoggerPrintDebug(const char* msg, const char* file,
 		}
 	}
 	else {
-		return SP_LOGGER_UNDIFINED; //check which msg should be returned in that case...
+		return SP_LOGGER_SUCCESS;
 	}
 }
 
@@ -171,6 +171,6 @@ SP_LOGGER_MSG spLoggerPrintMsg(const char* msg) {
 		}
 	}
 	else {
-		return SP_LOGGER_UNDIFINED; //check which msg should be returned in that case...
+		return SP_LOGGER_SUCCESS;
 	}
 }
