@@ -133,7 +133,6 @@ BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs);
  *
  * @param imgIndex 		 	 - the index of the image
  * @param numFeatures		 - the array which used to stored the number of extracted features
- * @param config 			 - the configuration structure
  * @param path				 - the path to the image
  * @param pcaNumComp		 - the PCA dimension
  *
@@ -141,7 +140,7 @@ BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs);
  * NULL in case of invalid arguments, or failure
  * Otherwise, the SPPoint array which stores the extracted features from the file is returned
  */
-SPPoint** readFeaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp);
+SPPoint** readFeaturesFromFile(int imgIndex, int* numFeatures, char* path, int pcaNumComp);
 
 /**
  * Getting the image query path from user.

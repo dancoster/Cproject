@@ -84,9 +84,9 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 			}
 			//updating num of all features
 			*numOfAllFeatures += numOfFeaturesPerImage[i];
+			// closing the file
+			fclose(featsFile);
 		}
-		// closing the file
-		fclose(featsFile);
 	}
 
 	else //extracting from feats files
@@ -102,7 +102,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 				return -1;
 			}
 			//insert image features from file to DB
-			siftDB[i] = readFeaturesFromFile(i, numOfFeaturesPerImage+i, config, path, pcaNumComp);
+			siftDB[i] = readFeaturesFromFile(i, numOfFeaturesPerImage+i, path, pcaNumComp);
 			if (siftDB[i] == NULL) {	// if unsuccessful
 				spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 				return -1;
@@ -245,7 +245,7 @@ BPQueueElement* sortFeaturesCount(int* counter, int numOfImgs) {
 	return queryClosestImages;
 }
 
-SPPoint** readFeaturesFromFile(int imgIndex, int* numFeatures, SPConfig config, char* path, int pcaNumComp) {
+SPPoint** readFeaturesFromFile(int imgIndex, int* numFeatures, char* path, int pcaNumComp) {
 	//checks if the feats file is available
 	if (access( path, F_OK ) == -1 ) {
 		// file doesn't exist or wrong permission
@@ -393,8 +393,8 @@ void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeat
 		spLoggerPrintInfo(KD_TREE_DESTROY);
 		onlyConfig = false;
 	}
+	spConfigDestroy(config);
 	if (onlyConfig) {  // before logger created
-		spConfigDestroy(config);
 		printf(CONFIG_DESTROY);
 	}
 	else { 				// after logger created
