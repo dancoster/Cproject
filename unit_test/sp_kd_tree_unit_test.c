@@ -62,67 +62,43 @@ static SPPoint** spKD2DArrayPoints(){
 	return pointsArray;
 }
 
-static SPPoint** spKD3DArrayPoints(){
-	SPPoint** pointsArray = (SPPoint**) malloc (sizeof(SPPoint*)*5);
-	double point_a[3] = {1,2,1};
-	double point_b[3] = {123,70,2};
-	double point_c[3] = {2,7,3};
-	double point_d[3] = {9,11,4};
-	double point_e[3] = {3,4,5};
-
-
-	pointsArray[0] = spPointCreate(point_a,3,1);
-	pointsArray[1] = spPointCreate(point_b,3,2);
-	pointsArray[2] = spPointCreate(point_c,3,3);
-	pointsArray[3] = spPointCreate(point_d,3,4);
-	pointsArray[4] = spPointCreate(point_e,3,5);
-
-	return pointsArray;
-}
-
-static bool tester(){
+static bool maxSpreadTreeTest(){
 	SPPoint** pointsArray =spKD2DArrayPoints();
 	SPKDArray* testArray = spKDArrayInit(pointsArray, 5, 2);
 	SP_KD_TREE_SPLIT_METHOD splitMethod = MAX_SPREAD;
-	SPKDTreeNode* tree = spKDTreeBuild(pointsArray, 5, 2, MAX_SPREAD);
+	SPKDTreeNode* tree = spKDTreeBuild(pointsArray, 5, 2, splitMethod);
+
+	SPPoint* LLL = spKDTreeGetNodePoint(spKDTreeGetLeftNode(spKDTreeGetLeftNode(spKDTreeGetLeftNode(tree))));
+	SPPoint* LLR = spKDTreeGetNodePoint(spKDTreeGetRightNode(spKDTreeGetLeftNode(spKDTreeGetLeftNode(tree))));
+	SPPoint* LR = spKDTreeGetNodePoint(spKDTreeGetRightNode(spKDTreeGetLeftNode(tree)));
+	SPPoint* RR = spKDTreeGetNodePoint(spKDTreeGetRightNode(spKDTreeGetRightNode(tree)));
+	SPPoint* RL = spKDTreeGetNodePoint(spKDTreeGetLeftNode(spKDTreeGetRightNode(tree)));
+
+	ASSERT_TRUE(spPointGetAxisCoor(LLR,0) == 3);
+	ASSERT_TRUE(spPointGetAxisCoor(LLR,1) == 4);
+	ASSERT_TRUE(spPointGetAxisCoor(LLL,0) == 1);
+	ASSERT_TRUE(spPointGetAxisCoor(LLL,1) == 2);
+	ASSERT_TRUE(spPointGetAxisCoor(LR,0) == 2);
+	ASSERT_TRUE(spPointGetAxisCoor(LR,1) == 7);
+	ASSERT_TRUE(spPointGetAxisCoor(RR,0) == 123);
+	ASSERT_TRUE(spPointGetAxisCoor(RR,1) == 70);
+	ASSERT_TRUE(spPointGetAxisCoor(RL,0) == 9);
+	ASSERT_TRUE(spPointGetAxisCoor(RL,1) == 11);
+
+	spKDArrayDestroy(testArray);
+	spPoint1DDestroy(pointsArray, 5);
+	spKDTreeNodeDestroy(tree);
+	spPointDestroy(LLL);
+	spPointDestroy(LLR);
+	spPointDestroy(LR);
+	spPointDestroy(RR);
+	spPointDestroy(RL);
+
+	return true;
 }
 
+
 //int main(){
-//	SPPoint** pointsArray =spKD2DArrayPoints();
-//	SPKDArray* testArray = spKDArrayInit(pointsArray, 5, 2);
-//	SP_KD_TREE_SPLIT_METHOD splitMethod = MAX_SPREAD;
-//	SPKDTreeNode* tree = spKDTreeBuild(pointsArray, 5, 2, MAX_SPREAD);
-//
-//	SPPoint* LLL = spKDTreeGetNodePoint(spKDTreeGetLeftNode(spKDTreeGetLeftNode(spKDTreeGetLeftNode(tree))));
-//	SPPoint* LLR = spKDTreeGetNodePoint(spKDTreeGetRightNode(spKDTreeGetLeftNode(spKDTreeGetLeftNode(tree))));
-//	SPPoint* LR = spKDTreeGetNodePoint(spKDTreeGetRightNode(spKDTreeGetLeftNode(tree)));
-//	SPPoint* RR = spKDTreeGetNodePoint(spKDTreeGetRightNode(spKDTreeGetRightNode(tree)));
-//	SPPoint* RL = spKDTreeGetNodePoint(spKDTreeGetLeftNode(spKDTreeGetRightNode(tree)));
-//
-//	int LLR0 = spPointGetAxisCoor(LLR,0);
-//	int LLR1 = spPointGetAxisCoor(LLR,1);
-//
-//	int LLL0 = spPointGetAxisCoor(LLL,0);
-//	int LLL1 = spPointGetAxisCoor(LLL,1);
-//
-//	int LR0 = spPointGetAxisCoor(LR,0);
-//	int LR1 = spPointGetAxisCoor(LR,1);
-//
-//	int RR0 = spPointGetAxisCoor(RR,0);
-//	int RR1 = spPointGetAxisCoor(RR,1);
-//
-//	int RL0 = spPointGetAxisCoor(RL,0);
-//	int RL1 = spPointGetAxisCoor(RL,1);
-//
-//	printf("LLR0 %d \n", LLR0);
-//	printf("LLR1 %d \n", LLR1);
-//	printf("LLL0 %d \n", LLL0);
-//	printf("LLL1 %d \n", LLL1);
-//	printf("LR0 %d \n", LR0);
-//	printf("LR1 %d \n", LR1);
-//	printf("RR0 %d \n", RR0);
-//	printf("RR1 %d \n", RR1);
-//	printf("RL0 %d \n", RL0);
-//	printf("RL1 %d \n", RL1);
-//
+//	RUN_TEST(maxSpreadTreeTest);
+//	printf("*********************************************\n");
 //}
