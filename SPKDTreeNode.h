@@ -131,4 +131,12 @@ int spKDTreeNodeGetKNN(SPKDTreeNode* root, SPBPQueue* bpq, SPPoint* point);
  */
 bool spKDTreeNodeSearchKNN(SPBPQueue* bpq, SPKDTreeNode* curr, SPPoint* point);
 
+//simple getter of Left
+SPKDTreeNode* spKDTreeGetLeftNode(SPKDTreeNode* tree);
+
+//simple getter of Right
+SPKDTreeNode* spKDTreeGetRightNode(SPKDTreeNode* tree);
+
+//simple getter of point in a node
+SPPoint* spKDTreeGetNodePoint(SPKDTreeNode* node);
 #endif /* SPKDTREENODE_H_ */

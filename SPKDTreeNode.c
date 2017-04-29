@@ -280,3 +280,15 @@ bool spKDTreeNodeSearchKNN(SPBPQueue* bpq, SPKDTreeNode* curr, SPPoint* point) {
 	//spLoggerPrintInfo(DONE_S_KNN);
 	return true;
 }
+
+SPKDTreeNode* spKDTreeGetLeftNode(SPKDTreeNode* tree){
+	return tree->left;
+}
+
+SPKDTreeNode* spKDTreeGetRightNode(SPKDTreeNode* tree){
+	return tree->right;
+}
+
+SPPoint* spKDTreeGetNodePoint(SPKDTreeNode* node){
+	return node->point;
+}

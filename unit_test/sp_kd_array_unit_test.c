@@ -60,7 +60,6 @@ static SPPoint** spKDArrayPoints(){
 
 	return pointsArray;
 }
-
 bool IntializationTest(){
 	SPPoint** pointsArray =spKDArrayPoints();
 	SPKDArray* testArray = spKDArrayInit(pointsArray, 5, 2);
@@ -68,7 +67,7 @@ bool IntializationTest(){
 	ASSERT_TRUE(spKDArrayGetSize(testArray) == 5);
 
 	spKDArrayDestroy(testArray);
-//	spKDArrayMatrixDestroy(pointsArray); //? how to release the memory of it?>
+	spPoint1DDestroy(pointsArray, 5);
 	return true;
 }
 
@@ -92,7 +91,7 @@ bool SortingTest(){
 	ASSERT_TRUE((spKDArrayGetSortedMatrix(testArray)[1][4]) == 1);
 
 	spKDArrayDestroy(testArray);
-//	spKDArrayMatrixDestroy(pointsArray); //? how to release the memory of it?>
+	spPoint1DDestroy(pointsArray, 5);
 
 	return true;
 
@@ -120,7 +119,7 @@ bool SplittingTest(){
 	spKDArrayDestroy(leftArray);
 	spKDArrayDestroy(rightArray);
 	spKDArrayDestroy(testArray);
-	//	spKDArrayMatrixDestroy(pointsArray); //? how to release the memory of it?>
+	spPoint1DDestroy(pointsArray, 5);
 	free(splittedArrays);
 
 	return true;
