@@ -41,7 +41,7 @@ using namespace sp;
 #define KD_TREE_ERROR "KD Tree couldn't be created\n"
 #define KNN_ERROR "Couldn't find K nearest neighbors\n"
 #define TERMINATE "<>"
-#define EXITING "Exiting…\n"
+#define EXITING "Exiting...\n"
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be complete\n"
 #define SORT_FEATURES_COUNT_ERROR "the function sortFeaturesCount couldn't be complete\n"
 #define FEATS_ERROR "There is no feats for these image"
@@ -69,7 +69,7 @@ using namespace sp;
  * 1 if successfully extracted all the features and stored it to <siftDB>
  */
 int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
-		SPConfig config, SP_CONFIG_MSG* msg);
+		SPConfig config, SP_CONFIG_MSG* msg, ImageProc* imageProc);
 
 /**
  * Converting 2D SPPoint array to 1D SPPoint array.
@@ -111,7 +111,7 @@ SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures
  * Otherwise, the pointer to the counter array which stores the feature hits for each image is returned
  */
 int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* queryPath,
-		SPConfig config, SP_CONFIG_MSG* msg);
+		SPConfig config, SP_CONFIG_MSG* msg, ImageProc* imageProc);
 
 /**
  * Sorting the images indexes by the number of feature hits.

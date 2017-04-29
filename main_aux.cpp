@@ -17,13 +17,12 @@
 int cmpfunc(const void *a, const void *b);
 
 int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
-		SPConfig config, SP_CONFIG_MSG* msg) {
+		SPConfig config, SP_CONFIG_MSG* msg, ImageProc* imageProc) {
 	if (siftDB==NULL || numOfImgs<1 || numOfFeaturesPerImage==NULL || numOfAllFeatures==NULL || config==NULL || msg==NULL) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return -1;
 	}
 
-	ImageProc ip(config);
 	char path[STR_MAX_LENGTH+1] = {'\0'};
 	FILE* featsFile=NULL;
 
@@ -41,7 +40,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 				return -1;
 			}
 			//get current image features
-			siftDB[i]=ip.getImageFeatures(path,i,numOfFeaturesPerImage+i);
+			siftDB[i]=imageProc->getImageFeatures(path,i,numOfFeaturesPerImage+i);
 			if (siftDB[i] == NULL) {	// if unsuccessful
 				spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 				return -1;
@@ -163,7 +162,7 @@ int getQueryPath(char* path) {
 }
 
 int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* queryPath,
-		SPConfig config, SP_CONFIG_MSG* msg) {
+		SPConfig config, SP_CONFIG_MSG* msg, ImageProc* imageProc) {
 	if (featuresTree==NULL || numOfImgs<1 || queryPath==NULL || config==NULL || msg==NULL) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
@@ -173,9 +172,8 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 	int* counter = (int*) calloc(numOfImgs, sizeof(int));
 	SPBPQueue* bpq = spBPQueueCreate(spKNN);
 	BPQueueElement* element = (BPQueueElement*) malloc(sizeof(BPQueueElement));
-	ImageProc ip(config);
 	int nFeaturesQuery = 0;
-	SPPoint** querySift = ip.getImageFeatures(queryPath, 0, &nFeaturesQuery);
+	SPPoint** querySift = imageProc->getImageFeatures(queryPath, 0, &nFeaturesQuery);
 	if (counter==NULL || querySift==NULL || bpq==NULL || element==NULL || spKNN==-1) {
 		free(counter);
 		spPoint1DDestroy(querySift, nFeaturesQuery);
