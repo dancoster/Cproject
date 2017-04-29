@@ -294,7 +294,6 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		}
 		else {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
-			free(token);
 			return false;
 		}
 
@@ -302,7 +301,6 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		token = strtok(line, "=");
 		if (sscanf (token," %s %s", system_param, temp) > 1) {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
-			free(token);
 			return false;
 		}
 
@@ -310,13 +308,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		token = strtok(NULL, "=");
 		if (token == NULL) {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
-			free(token);
 			return false;
 		}
 
 		if (sscanf(token," %s %s",val, temp) != 1) {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
-			free(token);
 			return false;
 		}
 
@@ -324,7 +320,6 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 		token = strtok(NULL, "=");
 		if (token != NULL) {
 			spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 1, NULL); //check msg
-			free(token);
 			return false;
 		}
 
@@ -351,7 +346,6 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 2, NULL);
 				}
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -365,13 +359,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				}
 				else {
 					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-					free(token);
 					return false;
 				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -385,13 +377,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				}
 				else {
 					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-					free(token);
 					return false;
 				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -410,13 +400,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				}
 				else {
 					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-					free(token);
 					return false;
 				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -437,6 +425,7 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				return false;
 			}
 		}
+
 		if (strcmp(system_param, "spNumOfSimilarImages") == 0) {
 			if (isNumber(val)) {
 				int temp = atoi(val);
@@ -447,13 +436,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				}
 				else {
 					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-					free(token);
 					return false;
 				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -475,7 +462,6 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -489,13 +475,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				}
 				else {
 					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-					free(token);
 					return false;
 				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -512,7 +496,6 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_STRING ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -526,13 +509,11 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 				}
 				else {
 					spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-					free(token);
 					return false;
 				}
 			}
 			else {
 				spConfigTerminate(config, fp, msg, SP_CONFIG_INVALID_INTEGER ,filename, *lineNumber, 2, NULL);
-				free(token);
 				return false;
 			}
 		}
@@ -544,7 +525,6 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 	}
 
 	//end of line scanning (while)
-	free(token);
 	return true;
 }
 
