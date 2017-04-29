@@ -100,9 +100,8 @@ bool SortingTest(){
 bool SplittingTest(){
 	SPPoint** pointsArray =spKDArrayPoints();
 	SPKDArray* testArray = spKDArrayInit(pointsArray, 5, 2);
-	SPKDArray** splittedArrays = (SPKDArray**) malloc(2*sizeof(SPKDArray*));
 
-	splittedArrays = spKDArraySplit(testArray, 0);
+	SPKDArray** splittedArrays = spKDArraySplit(testArray, 0);
 
 	SPKDArray* leftArray = splittedArrays[LEFT];
 	SPKDArray* rightArray = splittedArrays[RIGHT];
