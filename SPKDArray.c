@@ -344,31 +344,3 @@ int spKDArrayGetSize(SPKDArray* arr) {
 	}
 	return arr->size;
 }
-
-void spKDArrayPrintMatrix(SPKDArray* arr) {
-	if (arr == NULL) {
-		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
-		return;
-	}
-
-	for (int i=0; i < arr->dim; i++) {
-        for (int j = 0; j < arr->size; j++) {
-            printf("%d ", arr->sortedMatrix[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-void spKDArrayPrintPoints(SPPoint** points , int n) {
-	if (points == NULL) {
-		return;
-	}
-	if (n < 0) {
-		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
-	}
-
-	for (int i=0; i < n; i++) {
-            printf("%d ", spPointGetIndex(points[i]));
-		}
-    printf("\n");
-}

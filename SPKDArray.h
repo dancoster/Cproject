@@ -170,7 +170,4 @@ int spKDArrayGetDim(SPKDArray* arr);
  */
 int spKDArrayGetSize(SPKDArray* arr);
 
-void spKDArrayPrintMatrix(SPKDArray* arr);
-void spKDArrayPrintPoints(SPPoint** points , int n);
-
 #endif /* SPKDARRAY_H_ */

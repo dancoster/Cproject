@@ -34,7 +34,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 		return -1;
 	}
 	if (isExtractMode) { //extracting from images and saving to feats files
-		spLoggerPrintInfo(EXTRACTS_FEATURES);
+		spLoggerPrintInfo(EXTRACT_FEATURES_FROM_IMAGES);
 		for (int i=0; i<numOfImgs; i++) {
 			//get current image path
 			if(spConfigGetImagePath(path, config ,i) != SP_CONFIG_SUCCESS) {		// if unsuccessful
@@ -93,7 +93,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 
 	else //extracting from feats files
 	{
-		spLoggerPrintInfo(EXTRACTS_FEATURES_FROM_FILE);
+		spLoggerPrintInfo(EXTRACT_FEATURES_FROM_FILE);
 		int pcaNumComp = spConfigGetPCADim(config, msg);
 
 		//getting features from files
@@ -185,6 +185,7 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 		return NULL;
 	}
 	int nFeaturesQuery = 0;
+	spLoggerPrintInfo(EXTRACT_FEATURES_FROM_QUERY);
 	SPPoint** querySift = imageProc->getImageFeatures(queryPath, 0, &nFeaturesQuery);
 	if (querySift==NULL) {		//ImageProc error
 		free(counter);
@@ -195,6 +196,7 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 	}
 
 	// searching for KNN points for each query feature
+	spLoggerPrintInfo(SEARCH_CLOSEST_IMAGES);
 	for(int i=0; i<nFeaturesQuery; i++) {
 		// getting the KNN into the bpq
 		if (spKDTreeNodeGetKNN(featuresTree, bpq, querySift[i]) == -1) { // search failed

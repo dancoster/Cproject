@@ -47,10 +47,12 @@ using namespace sp;
 #define FEATS_ERROR "There is no feats for these image"
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
-#define EXTRACTS_FEATURES "Extracting the features..."
-#define EXTRACTS_FEATURES_FROM_FILE "Extracting the features from the feats files..."
+#define EXTRACT_FEATURES_FROM_IMAGES "Extracting the features from images..."
+#define EXTRACT_FEATURES_FROM_FILE "Extracting the features from feats files..."
+#define EXTRACT_FEATURES_FROM_QUERY "Extracting the features from query image..."
 #define SHOW_RESULTS_ERROR "the function showResults couldn't be complete\n"
 #define IMAGE_PROC_ERROR "Error in ImageProc functions\n"
+#define SEARCH_CLOSEST_IMAGES "Searching for closest images..."
 
 
 /**

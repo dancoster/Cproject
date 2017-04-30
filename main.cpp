@@ -188,9 +188,4 @@ int main(int argc, char* argv[]) {
 	}
 	// end of query loop
 	//---------------------------------------------
-
-	// free allocations
-	delete imageProc;
-	terminate(config,siftDB,numOfImgs,numOfFeaturesPerImage,allFeaturesArr,numOfAllFeatures,featuresTree);
-	return 0;
 }
