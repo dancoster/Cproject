@@ -219,7 +219,6 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 	spBPQueueDestroy(bpq);
 	free(element);
 
-	fflush(NULL);
 	return counter;
 }
 
