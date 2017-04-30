@@ -71,7 +71,6 @@ int main(int argc, char* argv[]) {
 	catch(std::exception & ex )
 	{
 		spLoggerPrintError(IMAGE_PROC_ERROR,__FILE__,__func__,__LINE__);
-		//delete(imageProc);
 		terminate(config,NULL,0,NULL,NULL,0,NULL);
 		return -1;
 	}
