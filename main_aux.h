@@ -44,15 +44,15 @@ using namespace sp;
 #define EXITING "Exiting...\n"
 #define COUNT_K_CLOSEST_ERROR "the function countKClosestPerFeature couldn't be complete\n"
 #define SORT_FEATURES_COUNT_ERROR "the function sortFeaturesCount couldn't be complete\n"
-#define FEATS_ERROR "There is no feats for these image"
-#define FEATS_READING_ERROR "Can't read features from file"
-#define NUM_FEATS_READING_ERROR "Can't read number of features per image"
-#define EXTRACT_FEATURES_FROM_IMAGES "Extracting the features from images..."
-#define EXTRACT_FEATURES_FROM_FILE "Extracting the features from feats files..."
-#define EXTRACT_FEATURES_FROM_QUERY "Extracting the features from query image..."
+#define FEATS_ERROR "There is no feats for these image\n"
+#define FEATS_READING_ERROR "Can't read features from file\n"
+#define NUM_FEATS_READING_ERROR "Can't read number of features per image\n"
+#define EXTRACT_FEATURES_FROM_IMAGES "Extracting the features from images...\n"
+#define EXTRACT_FEATURES_FROM_FILE "Extracting the features from feats files...\n"
+#define EXTRACT_FEATURES_FROM_QUERY "Extracting the features from query image...\n"
 #define SHOW_RESULTS_ERROR "the function showResults couldn't be complete\n"
 #define IMAGE_PROC_ERROR "Error in ImageProc functions\n"
-#define SEARCH_CLOSEST_IMAGES "Searching for closest images..."
+#define SEARCH_CLOSEST_IMAGES "Searching for closest images...\n"
 
 
 /**

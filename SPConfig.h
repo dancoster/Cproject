@@ -382,6 +382,4 @@ bool spConfigCheckVariablesInitialized(SPConfig config, FILE* fp, SP_CONFIG_MSG*
  */
 bool isNumber(char* num);
 
-void spConfigPrintInfo(const SPConfig config);
-
 #endif /* SPCONFIG_H_ */

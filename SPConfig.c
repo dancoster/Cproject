@@ -286,8 +286,12 @@ bool spConfigGetVariables(SPConfig config, FILE* fp, SP_CONFIG_MSG* msg, const c
 	char* token;
 	while (fgets(line, STR_MAX_LENGTH+1, fp) != NULL) {
 		//check if the line is a comment or a blank line
+		if (strcmp(line, "\n") == 0 || strcmp(line, "\r\n") == 0) {
+			(*lineNumber)++;;
+			continue;
+		}
 		if (sscanf (line, " %s", temp) == 1) {
-			if (temp[0] == '#' || strcmp(line, "\n") == 0 || strcmp(line, "\r\n") == 0) {
+			if (temp[0] == '#') {
 				(*lineNumber)++;;
 				continue;
 			}
@@ -575,23 +579,4 @@ bool isNumber(char* num) {
             return false;
     }
     return true;
-}
-
-void spConfigPrintInfo(const SPConfig config) {
-	printf("/---------- CONFIG INFO ----------/\n");
-	printf("spImagesDirectory: %s\n", config->spImagesDirectory);
-	printf("spImagesPrefix: %s\n", config->spImagesPrefix);
-	printf("spImagesSuffix: %s\n", config->spImagesSuffix);
-	printf("spNumOfImages: %d\n", config->spNumOfImages);
-	printf("spPCADimension: %d\n", config->spPCADimension);
-	printf("spPCAFilename: %s\n", config->spPCAFilename);
-	printf("spNumOfFeatures: %d\n", config->spNumOfFeatures);
-	printf("spExtractionMode: %d\n", config->spExtractionMode);
-	printf("spNumOfSimilarImages: %d\n", config->spNumOfSimilarImages);
-	printf("spKDTreeSplitMethod: %d\n", config->spKDTreeSplitMethod);
-	printf("spKNN: %d\n", config->spKNN);
-	printf("spMinimalGUI: %d\n", config->spMinimalGUI);
-	printf("spLoggerLevel: %d\n", config->spLoggerLevel);
-	printf("spLoggerFilename: %s\n", config->spLoggerFilename);
-	printf("/-------- CONFIG INFO END --------/\n");
 }

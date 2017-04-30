@@ -35,7 +35,6 @@ int main(int argc, char* argv[]) {
 	}
 	else {
 		printf(CONFIG_CREATED); // create success
-		spConfigPrintInfo(config);
 	}
 	//---------------------------------------------
 

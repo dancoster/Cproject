@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-// Global variable for sorting
-int sortByDim;
-
 struct sp_kd_array_t {
 	SPPoint** points;
 	int** sortedMatrix;
