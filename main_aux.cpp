@@ -18,7 +18,8 @@ int cmpfunc(const void *a, const void *b);
 
 int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage, int* numOfAllFeatures,
 		SPConfig config, SP_CONFIG_MSG* msg, ImageProc* imageProc) {
-	if (siftDB==NULL || numOfImgs<1 || numOfFeaturesPerImage==NULL || numOfAllFeatures==NULL || config==NULL || msg==NULL) {
+	if (siftDB==NULL || numOfImgs<1 || numOfFeaturesPerImage==NULL || numOfAllFeatures==NULL
+			|| config==NULL || msg==NULL || imageProc==NULL) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return -1;
 	}
@@ -33,6 +34,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 		return -1;
 	}
 	if (isExtractMode) { //extracting from images and saving to feats files
+		spLoggerPrintInfo(EXTRACTS_FEATURES);
 		for (int i=0; i<numOfImgs; i++) {
 			//get current image path
 			if(spConfigGetImagePath(path, config ,i) != SP_CONFIG_SUCCESS) {		// if unsuccessful
@@ -45,6 +47,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 				spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 				return -1;
 			}
+
 			//get current image output file path
 			if (spConfigGetFeatsPath(path, config, i) != SP_CONFIG_SUCCESS) {	// if unsuccessful
 				spLoggerPrintError(IMG_PATH_ERROR,__FILE__,__func__,__LINE__);
@@ -90,7 +93,7 @@ int extractFeatures(SPPoint*** siftDB, int numOfImgs, int* numOfFeaturesPerImage
 
 	else //extracting from feats files
 	{
-		spLoggerPrintInfo(EXTRACTS_FEATURES);
+		spLoggerPrintInfo(EXTRACTS_FEATURES_FROM_FILE);
 		int pcaNumComp = spConfigGetPCADim(config, msg);
 
 		//getting features from files
@@ -137,13 +140,11 @@ SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures
 	}
 
 	SP_KD_TREE_SPLIT_METHOD splitMethod = spConfigGetKDTreeSplitMethod(config ,msg);
-//	printf("SPLIT METHOD: %d\n",splitMethod );
-//	fflush(NULL);
+
 	int dim = spConfigGetPCADim(config, msg);
-	//if kdArr==NULL something
+
 	SPKDTreeNode* featuresTree = spKDTreeBuild(allFeaturesArr, numOfAllFeatures, dim, splitMethod);
-//	spLoggerPrintInfo("BUILT FEATS TREE SUCCESS");
-//	fflush(NULL);
+
 	if (featuresTree == NULL) {
 		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
@@ -163,34 +164,38 @@ int getQueryPath(char* path) {
 
 int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* queryPath,
 		SPConfig config, SP_CONFIG_MSG* msg, ImageProc* imageProc) {
-	if (featuresTree==NULL || numOfImgs<1 || queryPath==NULL || config==NULL || msg==NULL) {
+	if (featuresTree==NULL || numOfImgs<1 || queryPath==NULL || config==NULL || msg==NULL || imageProc==NULL) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
 	}
 
 	int spKNN = spConfigGetKNN(config, msg);
+	if (spKNN == -1) {
+		spLoggerPrintError(FUNCTION_ERROR,__FILE__,__func__,__LINE__);
+		return NULL;
+	}
 	int* counter = (int*) calloc(numOfImgs, sizeof(int));
 	SPBPQueue* bpq = spBPQueueCreate(spKNN);
 	BPQueueElement* element = (BPQueueElement*) malloc(sizeof(BPQueueElement));
-	int nFeaturesQuery = 0;
-	SPPoint** querySift = imageProc->getImageFeatures(queryPath, 0, &nFeaturesQuery);
-	if (counter==NULL || querySift==NULL || bpq==NULL || element==NULL || spKNN==-1) {
+	if (counter==NULL || bpq==NULL || element==NULL) { 		// Allocation failure
 		free(counter);
-		spPoint1DDestroy(querySift, nFeaturesQuery);
 		spBPQueueDestroy(bpq);
 		free(element);
 		spLoggerPrintError(ALLOCATION_ERROR,__FILE__,__func__,__LINE__);
 		return NULL;
 	}
-
-//	printf("PASS 1\n");
-//	printf("%d ",nFeaturesQuery);
-//	fflush(NULL);
+	int nFeaturesQuery = 0;
+	SPPoint** querySift = imageProc->getImageFeatures(queryPath, 0, &nFeaturesQuery);
+	if (querySift==NULL) {		//ImageProc error
+		free(counter);
+		spPoint1DDestroy(querySift, nFeaturesQuery);
+		spBPQueueDestroy(bpq);
+		free(element);
+		return NULL;
+	}
 
 	// searching for KNN points for each query feature
 	for(int i=0; i<nFeaturesQuery; i++) {
-//		printf("QUERY[%d] point=(%d)\n",i,spPointGetIndex(querySift[i]));
-//		fflush(NULL);
 		// getting the KNN into the bpq
 		if (spKDTreeNodeGetKNN(featuresTree, bpq, querySift[i]) == -1) { // search failed
 			free(counter);
@@ -200,8 +205,6 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 			spLoggerPrintError(KNN_ERROR,__FILE__,__func__,__LINE__);
 			return NULL;
 		}
-//		printf("PASS 2\n");
-//		fflush(NULL);
 		// counting which images the KNN points belong to
 		for(int j=0; j<spKNN; j++) {
 			spBPQueuePeek(bpq, element);
@@ -209,15 +212,15 @@ int* countKClosestPerFeature(SPKDTreeNode* featuresTree, int numOfImgs, char* qu
 			counter[element->index]++;
 		}
 	}
-//	printf("PASS 3\n");
-//	fflush(NULL);
 	// free allocations
 	spPoint1DDestroy(querySift, nFeaturesQuery);
 	spBPQueueDestroy(bpq);
 	free(element);
+
 	for(int i=0; i<numOfImgs; i++)
 		printf("img%d: %d\n", i, counter[i]);
 	printf("\n");
+
 	fflush(NULL);
 	return counter;
 }
@@ -266,8 +269,6 @@ SPPoint** readFeaturesFromFile(int imgIndex, int* numFeatures, char* path, int p
 		fclose(featuresFile);
 		return NULL;
 	}
-//			printf("number of features: %d\n", *numFeatures);
-//			fflush(NULL);
 
 	//read features
 	SPPoint** featuresArray = (SPPoint**) malloc((*numFeatures)*sizeof(SPPoint*));
@@ -280,9 +281,6 @@ SPPoint** readFeaturesFromFile(int imgIndex, int* numFeatures, char* path, int p
 		return NULL;
 	}
 
-//			printf("MSG 1\n");
-//			fflush(NULL);
-
 	for (int i=0; i<(*numFeatures); i++) {
 		// reading double values to tempArray
 		for (int j=0; j<pcaNumComp; j++) {
@@ -294,13 +292,6 @@ SPPoint** readFeaturesFromFile(int imgIndex, int* numFeatures, char* path, int p
 				return NULL;
 			}
 		} // end reading double values to tempArray
-
-//				printf("MSG 2\n");
-//				fflush(NULL);
-//				for (int r=0; r<pcaNumComp; r++) {
-//					printf("%lf ", tempArray[r]);
-//				}
-//				fflush(NULL);
 
 		// creating the i'th point from tempArray
 		featuresArray[i] = spPointCreate(tempArray, pcaNumComp, imgIndex);
@@ -336,13 +327,13 @@ int cmpfunc(const void *a, const void *b) {
 	  }
 }
 
-bool showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg) {
-	if (queryPath==NULL || queryClosestImages==NULL || config==NULL || msg==NULL) {
+bool showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg,
+		ImageProc* imageProc) {
+	if (queryPath==NULL || queryClosestImages==NULL || config==NULL || msg==NULL || imageProc==NULL) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return false;
 	}
 
-	ImageProc ip(config);
 	char imagePath[STR_MAX_LENGTH+1] = {'\0'};
 	int numOfSimilarImages = spConfigGetNumOfSimilarImages(config, msg);
 
@@ -352,7 +343,7 @@ bool showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig c
 				spLoggerPrintError(IMG_PATH_ERROR,__FILE__,__func__,__LINE__);
 				return false;
 			}
-			ip.showImage(imagePath);
+			imageProc->showImage(imagePath);
 		}
 	}
 	else { // NON-Minimal GUI
@@ -376,16 +367,18 @@ void terminate(SPConfig config, SPPoint*** siftDB, int numOfImgs, int* numOfFeat
 		for (int i=0; i< numOfImgs; i++) {
 			spPoint1DDestroy(siftDB[i], numOfFeaturesPerImage[i]);
 		}
-	free(siftDB);
-	spLoggerPrintInfo(SIFT_DB_DESTROY);
-	onlyConfig = false;
+		free(siftDB);
+		spLoggerPrintInfo(SIFT_DB_DESTROY);
+		onlyConfig = false;
 	}
 	if (allFeaturesArr != NULL) {
 		spPoint1DDestroy(allFeaturesArr, numOfAllFeatures);
 		spLoggerPrintInfo(ALL_FEATURES_ARRAY_DESTROY);
 		onlyConfig = false;
 	}
-	free(numOfFeaturesPerImage);
+	if (numOfFeaturesPerImage != NULL) {
+		free(numOfFeaturesPerImage);
+	}
 	if (featuresTree != NULL) {
 			spKDTreeNodeDestroy(featuresTree);
 		spLoggerPrintInfo(KD_TREE_DESTROY);

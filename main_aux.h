@@ -47,8 +47,10 @@ using namespace sp;
 #define FEATS_ERROR "There is no feats for these image"
 #define FEATS_READING_ERROR "Can't read features from file"
 #define NUM_FEATS_READING_ERROR "Can't read number of features per image"
-#define EXTRACTS_FEATURES "Extracting the features from the feats files"
+#define EXTRACTS_FEATURES "Extracting the features..."
+#define EXTRACTS_FEATURES_FROM_FILE "Extracting the features from the feats files..."
 #define SHOW_RESULTS_ERROR "the function showResults couldn't be complete\n"
+#define IMAGE_PROC_ERROR "Error in ImageProc functions\n"
 
 
 /**
@@ -63,6 +65,7 @@ using namespace sp;
  * @param numOfAllFeatures 	 - the number of all features which were successfully extracted
  * @param config 			 - the configuration structure
  * @param msg 				 - pointer in which the msg returned by any functions of the config is stored
+ * @param imageProc 		 - imageProc object for using openCV
  *
  * @return
  * -1 in case of invalid arguments, or failure
@@ -105,6 +108,7 @@ SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures
  * @param queryPath 		 - the query path
  * @param config 			 - the configuration structure
  * @param msg 				 - pointer in which the msg returned by any functions of the config is stored
+ * @param imageProc 		 - imageProc object for using openCV
  *
  * @return
  * NULL in case of invalid arguments, or failure
@@ -167,12 +171,14 @@ int getQueryPath(char* path);
  * @param queryClosestImages - the queue elements which holds the best image indexes
  * @param config 			 - the configuration structure
  * @param msg 				 - pointer in which the msg returned by any functions of the config is stored
+ * @param imageProc 		 - imageProc object for using openCV
  *
  * @return
  * false in case of invalid arguments, or failure
  * Otherwise, true
  */
-bool showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg);
+bool showResults(char* queryPath, BPQueueElement* queryClosestImages, SPConfig config, SP_CONFIG_MSG* msg,
+		ImageProc* imageProc);
 
 /**
  * Frees all memory resources associate with the program, and terminates it.

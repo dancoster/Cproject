@@ -31,9 +31,6 @@ SPKDArray* spKDArrayInit(SPPoint** points, int n, int dim) {
 		return NULL;
 	}
 
-//	spKDArrayPrintPoints(points, n);
-//	fflush(NULL);
-
 	SPKDArray* arr = spKDArrayAlloc(points, n, dim); // allocating memory for all array fields
 	if (arr == NULL) {
 		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
@@ -54,21 +51,14 @@ SPKDArray* spKDArrayInit(SPPoint** points, int n, int dim) {
 			elements[j] = element;
 		}
 		qsort(elements, n, sizeof(BPQueueElement), spKDArrayCompareValuesByDim); // sorting the elements by i-th coor value
-//		printf("AFTER SORTING\n");
-//		for (int l=0; l<n; l++) {
-//			printf("element[%d]=(%d,%f)\n", l, elements[l].index,elements[l].value);
-//			fflush(NULL);
-//			}
+
 		for (int k=0; k<n; k++) { // setting i-th row of sortedMatrix with the sorted indexes
-//			printf("%d ", elements[k].index);
-//			fflush(NULL);
 			arr->sortedMatrix[i][k] = elements[k].index;
 		}
 
 	}
 	free(elements);
-//	printf("\n");
-//	printf("FINISH ARR INIT\n");
+
 	return arr;
 }
 
@@ -86,8 +76,6 @@ SPKDArray** spKDArraySplit(SPKDArray* arr, int coor) {
 		nLeft = n/2;
 	else nLeft = n/2+1;
 	nRight =  n - nLeft;
-//	printf("size left: %d, size right: %d\n", nLeft, nRight);
-//	fflush(NULL);
 	SPPoint** arrLeft = (SPPoint**) (malloc(nLeft*sizeof(SPPoint*)));
 	SPPoint** arrRight = (SPPoint**) (malloc(nRight*sizeof(SPPoint*)));
 	SPKDArray** splittedArrays = (SPKDArray**) malloc(2*sizeof(SPKDArray*));
@@ -105,28 +93,15 @@ SPKDArray** spKDArraySplit(SPKDArray* arr, int coor) {
 		return NULL;
 	}
 
-//	printf("SPLIT MSG #1\n");
-//	fflush(NULL);
-
 	// editing X's indexes - set '0' for left array, '1' for right array
 	int k;
 	for (int i=0; i<n; i++) {
 		k = arr->sortedMatrix[coor][i];
-//		printf("%d ", k);
 		if (i < nLeft)
 			X[k] = LEFT;
 		else
 			X[k] = RIGHT;
 	}
-//	printf("\n");
-//	printf("X of row %d is:\n", coor);
-//	for (int i=0; i<n; i++)
-//		printf("%d ", X[i]);
-//
-//
-//	printf("\n");
-//	printf("SPLIT MSG #2\n");
-//	fflush(NULL);
 
 	// creating the two arrays of points
 	for (int i=0; i<n; i++) {
@@ -147,13 +122,7 @@ SPKDArray** spKDArraySplit(SPKDArray* arr, int coor) {
 			cRight++;
 		}
 	}
-//	printf("cLeft, cRight = %d,%d\n", cLeft, cRight);
-//	printf("map:\n");
-//	for (int i=0; i<n; i++)
-//		printf("%d ", map[i]);
-//	printf("\n");
-//	printf("SPLIT MSG #2.5\n");
-//	fflush(NULL);
+
 	// Allocation failure occurred in a copy point from the loop above, releasing all memory allocations
 	if ((cLeft != nLeft) || (cRight != nRight)) {
 		spLoggerPrintError(ALLOCATION_ERROR, __FILE__, __func__, __LINE__);
@@ -166,9 +135,6 @@ SPKDArray** spKDArraySplit(SPKDArray* arr, int coor) {
 		free(map);
 		return NULL;
 	}
-
-//	printf("SPLIT MSG #3\n");
-//	fflush(NULL);
 
 	// allocating the KDArrays of left and right arrays
 	splittedArrays[LEFT] = spKDArrayAlloc(arrLeft, nLeft, dim);
@@ -201,15 +167,6 @@ SPKDArray** spKDArraySplit(SPKDArray* arr, int coor) {
 			}
 		}
 	}
-//	printf("\n");
-//	printf("LEFT MATRIX:\n");
-//	spKDArrayPrintMatrix(splittedArrays[LEFT]);
-//	printf("\n");
-//	printf("RIGHT MATRIX:\n");
-//	spKDArrayPrintMatrix(splittedArrays[RIGHT]);
-//	fflush(NULL);
-//	printf("SPLIT MSG #4\n");
-//	fflush(NULL);
 
 	// free all memory allocations used
 	spPoint1DDestroy(arrLeft, nLeft);
@@ -292,10 +249,13 @@ int spKDArrayCompareValuesByDim(const void *a, const void *b) {
 }
 
 void spPoint1DDestroy(SPPoint** arr, int n) {
-	if (arr == NULL || n<0) {
-		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+	if (arr == NULL) {
 		return;
 	}
+	if (n <= 0) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+	}
+
 	for (int i=0; i<n; i++) {
 		spPointDestroy(arr[i]);
 	}
@@ -328,7 +288,10 @@ int** spKDArrayMatrixAlloc(int n, int m) {
 }
 
 void spKDArrayMatrixDestroy(int** mat, int n, int m) {
-	if (mat==NULL || n<=0 || m<=0) {
+	if (mat == NULL) {
+		return;
+	}
+	if (n <= 0 || m <= 0) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return;
 	}
@@ -340,8 +303,7 @@ void spKDArrayMatrixDestroy(int** mat, int n, int m) {
 }
 
 void spKDArrayDestroy(SPKDArray* arr) {
-	if (arr==NULL) {
-		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+	if (arr == NULL) {
 		return;
 	}
 
@@ -368,7 +330,7 @@ int** spKDArrayGetSortedMatrix(SPKDArray* arr) {
 }
 
 int spKDArrayGetDim(SPKDArray* arr) {
-	if (arr== NULL) {
+	if (arr == NULL) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return -1;
 	}
@@ -384,7 +346,7 @@ int spKDArrayGetSize(SPKDArray* arr) {
 }
 
 void spKDArrayPrintMatrix(SPKDArray* arr) {
-	if (arr== NULL) {
+	if (arr == NULL) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return;
 	}
@@ -398,9 +360,11 @@ void spKDArrayPrintMatrix(SPKDArray* arr) {
 }
 
 void spKDArrayPrintPoints(SPPoint** points , int n) {
-	if (points== NULL) {
-		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
+	if (points == NULL) {
 		return;
+	}
+	if (n < 0) {
+		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 	}
 
 	for (int i=0; i < n; i++) {

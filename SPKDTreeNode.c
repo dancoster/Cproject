@@ -22,14 +22,8 @@ SPKDTreeNode* spKDTreeBuild(SPPoint** points, int size, int dim, SP_KD_TREE_SPLI
 		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
 	}
-//	spLoggerPrintInfo("SPKDArray INIT of tree SUCCESS");
-//	printf("size of array: %d\n", spKDArrayGetSize(arr));
-//	spKDArrayPrintMatrix(arr);
-	fflush(NULL);
 
 	int splitDim = spKDTreeNodeSplitByDim(arr, 0, splitMethod);
-//	printf("SPLIT DIM: %d\n", splitDim);
-//	fflush(NULL);
 
 	SPKDTreeNode* result = spKDTreeNodeCreate(arr, splitDim, splitMethod); // spLogger msg inside
 	spKDArrayDestroy(arr);
@@ -37,7 +31,7 @@ SPKDTreeNode* spKDTreeBuild(SPPoint** points, int size, int dim, SP_KD_TREE_SPLI
 		spLoggerPrintError(FUNCTION_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
 	}
-//	spLoggerPrintInfo("spKDTreeBuild SUCCESS\n");
+
 	return result;
 }
 
@@ -51,8 +45,6 @@ SPKDTreeNode* spKDTreeNodeCreate(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHO
 	SPKDArray** splittedArray;
 	int sizeLeft, medianIndex;
 
-//	printf("size of ARR: %d\n",spKDArrayGetSize(arr));
-//	fflush(NULL);
 	if (spKDArrayGetSize(arr) == 1) { // if the node is a leaf
 		return spKDTreeNodeCreateLeaf(arr); // spLogger msg inside
 	}
@@ -65,8 +57,6 @@ SPKDTreeNode* spKDTreeNodeCreate(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHO
 	}
 
 	splittedArray = spKDArraySplit(arr, dim-1);
-//	spLoggerPrintInfo("spKDArraySplit SUCCESS\n");
-//	fflush(NULL);
 	if (splittedArray == NULL) { //split function failure, spLogger msg inside
 		spKDArrayDestroy(arr);
 		free(node);
@@ -75,33 +65,19 @@ SPKDTreeNode* spKDTreeNodeCreate(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHO
 
 	sizeLeft = spKDArrayGetSize(splittedArray[LEFT]);
 	medianIndex = spKDArrayGetSortedMatrix(splittedArray[LEFT])[dim-1][sizeLeft-1];
-//	printf("median: %d\n", medianIndex);
-//	fflush(NULL);
+
 	node->dim = dim;
-//	printf("node dim: %d\n", node->dim);
-//	fflush(NULL);
 	node->val = spPointGetAxisCoor((spKDArrayGetPoints(splittedArray[LEFT]))[medianIndex], dim-1);
-//	printf("node meidan val: %f\n", node->val);
-//	fflush(NULL);
 	node->left = spKDTreeNodeCreate(splittedArray[LEFT],
 			spKDTreeNodeSplitByDim(splittedArray[LEFT], dim, splitMethod), splitMethod);
 	node->right = spKDTreeNodeCreate(splittedArray[RIGHT],
 			spKDTreeNodeSplitByDim(splittedArray[RIGHT], dim, splitMethod), splitMethod);
 	node->point = NULL;
 
-//	fflush(NULL);
-//	printf("success note return 1\n");
-//	fflush(NULL);
-
-	// free LEFT RIGHT arrays?
 	spKDArrayDestroy(splittedArray[LEFT]);
 	spKDArrayDestroy(splittedArray[RIGHT]);
 	free(splittedArray);
 	fflush(NULL);
-
-//	fflush(NULL);
-//	printf("success note return 2\n");
-//	fflush(NULL);
 
 	if (node->left == NULL || node->right == NULL) { //if create failed, spLogger msg inside
 		spKDTreeNodeDestroy(node);
@@ -116,9 +92,6 @@ SPKDTreeNode* spKDTreeNodeCreateLeaf(SPKDArray* arr) {
 		spLoggerPrintError(INVALID_ARGUMENTS_ERROR, __FILE__, __func__, __LINE__);
 		return NULL;
 	}
-
-//	printf("ENTERED CREATE LEAF\n");
-//	fflush(NULL);
 
 	SPKDTreeNode* node = (SPKDTreeNode*) malloc(sizeof(SPKDTreeNode));
 	if (node == NULL) { //Allocation failure
@@ -149,16 +122,12 @@ int spKDTreeNodeSplitByDim(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHOD spli
 	}
 
 	if (splitMethod == MAX_SPREAD) {
-//		printf("ENTERED MAX SPREAD\n");
 		return spKDTreeNodeGetMaxSpreadDim(arr); // spLogger msg inside
 	}
 	if (splitMethod == RANDOM) {
-//		printf("ENTERED RANDOM\n");
-		fflush(NULL);
 		return (rand() % spKDArrayGetDim(arr) + 1); // spLogger msg inside
 	}
 	if (splitMethod == INCREMENTAL) {
-//		printf("ENTERED INCREMENTAL\n");
 		return ((dim+1) % spKDArrayGetDim(arr)); // spLogger msg inside
 	}
 	return INVALID;
@@ -182,15 +151,12 @@ int spKDTreeNodeGetMaxSpreadDim(SPKDArray* arr) {
 		//calculating the i'th dim spread
 		currSpread = (spPointGetAxisCoor((spKDArrayGetPoints(arr))[lastIndex], i)
 				- spPointGetAxisCoor((spKDArrayGetPoints(arr))[firstIndex], i));
-//		printf("row %d spread: %f\n", i, currSpread);
-//		fflush(NULL);
 		if (currSpread > maxSpread) { //checking if new max spread is found
 			maxSpread = currSpread;
 			maxSpreadDim = i;
 		}
 	}
-//	printf("MAX SPREAD DIM: %d, SPREAD: %f\n", maxSpreadDim+1, maxSpread);
-//	fflush(NULL);
+
 	return maxSpreadDim+1;
 }
 
@@ -226,13 +192,7 @@ bool spKDTreeNodeSearchKNN(SPBPQueue* bpq, SPKDTreeNode* curr, SPPoint* point) {
 		return false;
 	}
 
-//	printf("PASS 11\n");
-//	fflush(NULL);
-
 	if (curr->dim == INVALID) { // if curr is a leaf
-//		printf("PASS LEAF\n");
-//		printf("\n");
-//		fflush(NULL);
 		if (spBPQueueEnqueue(bpq, spPointGetIndex(curr->point),   		//!!IMPORTANT!! check what to do if malloc fails
 				spPointL2SquaredDistance(curr->point, point))			//at bpq element inside the func spBPQueueEnqueue
 				== SP_BPQUEUE_OUT_OF_MEMORY) {							//OR the enqueue failed due to full queue or invalid args
@@ -242,9 +202,6 @@ bool spKDTreeNodeSearchKNN(SPBPQueue* bpq, SPKDTreeNode* curr, SPPoint* point) {
 		else
 			return true;
 	}
-
-//	printf("PASS 12\n");
-//	fflush(NULL);
 
 	bool searchedSide; // side searched
 	if (spPointGetAxisCoor(point, curr->dim-1) <= curr->val) { // search left subtree
@@ -260,11 +217,6 @@ bool spKDTreeNodeSearchKNN(SPBPQueue* bpq, SPKDTreeNode* curr, SPPoint* point) {
 		searchedSide = RIGHT;
 	}
 
-//	printf("PASS 13\n");
-//	fflush(NULL);
-//	printf("CURR DIM: %d\n",curr->dim);
-//	fflush(NULL);
-
 	if (!spBPQueueIsFull(bpq)
 			|| pow((curr->val - spPointGetAxisCoor(point, curr->dim-1)), 2)
 					< spBPQueueMaxValue(bpq)) {
@@ -275,20 +227,30 @@ bool spKDTreeNodeSearchKNN(SPBPQueue* bpq, SPKDTreeNode* curr, SPPoint* point) {
 			return spKDTreeNodeSearchKNN(bpq, curr->left, point);
 		}
 	}
-//	printf("PASS 14\n");
-//	fflush(NULL);
-	//spLoggerPrintInfo(DONE_S_KNN);
+
 	return true;
 }
 
-SPKDTreeNode* spKDTreeGetLeftNode(SPKDTreeNode* tree){
+SPKDTreeNode* spKDTreeGetLeftNode(SPKDTreeNode* tree) {
+	if (tree == NULL) {
+		return NULL;
+	}
+
 	return tree->left;
 }
 
-SPKDTreeNode* spKDTreeGetRightNode(SPKDTreeNode* tree){
+SPKDTreeNode* spKDTreeGetRightNode(SPKDTreeNode* tree) {
+	if (tree == NULL) {
+		return NULL;
+	}
+
 	return tree->right;
 }
 
-SPPoint* spKDTreeGetNodePoint(SPKDTreeNode* node){
+SPPoint* spKDTreeGetNodePoint(SPKDTreeNode* node) {
+	if (node == NULL) {
+		return NULL;
+	}
+
 	return node->point;
 }

@@ -147,21 +147,21 @@ bool configFilesDefultValues(){
 	return true;
 	}
 
-int main(){
-	RUN_TEST(noConfigFile);
-	printf("*********************************************\n");
-	RUN_TEST(configFileNoArgs);
-	printf("*********************************************\n");
-	RUN_TEST(configFileMissingParameterLines);
-	printf("*********************************************\n");
-	RUN_TEST(configFileInvalidArgs);
-	printf("*********************************************\n");
-	RUN_TEST(configFilesSetValues);
-	printf("*********************************************\n");
-	RUN_TEST(configFilesDefultValues);
-	printf("*********************************************\n");
-
-	printf("test ok!");
-	return 0;
-}
+//int main(){
+//	RUN_TEST(noConfigFile);
+//	printf("*********************************************\n");
+//	RUN_TEST(configFileNoArgs);
+//	printf("*********************************************\n");
+//	RUN_TEST(configFileMissingParameterLines);
+//	printf("*********************************************\n");
+//	RUN_TEST(configFileInvalidArgs);
+//	printf("*********************************************\n");
+//	RUN_TEST(configFilesSetValues);
+//	printf("*********************************************\n");
+//	RUN_TEST(configFilesDefultValues);
+//	printf("*********************************************\n");
+//
+//	printf("test ok!");
+//	return 0;
+//}
 

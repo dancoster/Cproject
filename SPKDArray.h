@@ -90,7 +90,7 @@ int spDKArrayPointsCopy(SPPoint** dest, SPPoint** src, int n);
  * @param arr 	- the points array to destroy
  * @param n 	- the size of <arr>
  *
- * if arr is NULL OR n<0 nothing happens.
+ * if arr is NULL OR n<=0 nothing happens.
  */
 void spPoint1DDestroy(SPPoint** arr, int n);
 

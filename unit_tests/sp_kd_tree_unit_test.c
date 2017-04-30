@@ -62,7 +62,7 @@ static bool maxSpreadTreeTest(){
 }
 
 
-int main(){
-	RUN_TEST(maxSpreadTreeTest);
-	printf("*********************************************\n");
-}
+//int main(){
+//	RUN_TEST(maxSpreadTreeTest);
+//	printf("*********************************************\n");
+//}

@@ -93,14 +93,14 @@ bool SplittingTest(){
 	return true;
 }
 
-int main() {
-	RUN_TEST(IntializationTest);
-	printf("*********************************************\n");
-	RUN_TEST(SortingTest);
-	printf("*********************************************\n");
-	RUN_TEST(SplittingTest);
-	printf("*********************************************\n");
-	printf("test ok!");
-	return 0;
-}
+//int main() {
+//	RUN_TEST(IntializationTest);
+//	printf("*********************************************\n");
+//	RUN_TEST(SortingTest);
+//	printf("*********************************************\n");
+//	RUN_TEST(SplittingTest);
+//	printf("*********************************************\n");
+//	printf("test ok!");
+//	return 0;
+//}
 
