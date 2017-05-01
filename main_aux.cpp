@@ -155,7 +155,6 @@ SPKDTreeNode* buildFeaturesKDTree(SPPoint** allFeaturesArr, int numOfAllFeatures
 
 int getQueryPath(char* path) {
 	printf(ENTER_QUERY_PATH);
-	fflush(NULL);
 	int res = scanf("%s", path);
 	if(res == EOF || res==0)
 		return -1;

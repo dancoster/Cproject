@@ -14,6 +14,6 @@ SPKDArray.o: SPKDArray.c SPKDArray.h
 SPPoint.o: SPPoint.c SPPoint.h 
 	$(CC) $(COMP_FLAG) -c $*.c
 SPLogger.o: SPLogger.c SPLogger.h
-	$(CC) $(C_COMP_FLAG) -c $*.c
+	$(CC) $(COMP_FLAG) -c $*.c
 clean:
 	rm -f $(OBJS) $(EXEC)

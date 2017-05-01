@@ -15,10 +15,10 @@ SPKDTreeNode.o: SPKDTreeNode.c SPKDTreeNode.h
 SPPoint.o: SPPoint.c SPPoint.h 
 	$(CC) $(COMP_FLAG) -c $*.c
 SPLogger.o: SPLogger.c SPLogger.h
-	$(CC) $(C_COMP_FLAG) -c $*.c
+	$(CC) $(COMP_FLAG) -c $*.c
 SPKDArray.o: SPKDArray.c SPKDArray.h SPLogger.h SPPoint.h
-	$(CC) $(C_COMP_FLAG) -c $*.c
+	$(CC) $(COMP_FLAG) -c $*.c
 SPBPriorityQueue.o: SPBPriorityQueue.c SPBPriorityQueue.h
-	$(CC) $(C_COMP_FLAG) -c $*.c
+	$(CC) $(COMP_FLAG) -c $*.c
 clean:
 	rm -f $(OBJS) $(EXEC)
