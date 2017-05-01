@@ -58,6 +58,7 @@ SPKDTreeNode* spKDTreeNodeCreate(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHO
 
 	splittedArray = spKDArraySplit(arr, dim-1);
 	if (splittedArray == NULL) { //split function failure, spLogger msg inside
+		return NULL;
 		spKDArrayDestroy(arr);
 		free(node);
 		return NULL;
@@ -65,7 +66,6 @@ SPKDTreeNode* spKDTreeNodeCreate(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHO
 
 	sizeLeft = spKDArrayGetSize(splittedArray[LEFT]);
 	medianIndex = spKDArrayGetSortedMatrix(splittedArray[LEFT])[dim-1][sizeLeft-1];
-
 	node->dim = dim;
 	node->val = spPointGetAxisCoor((spKDArrayGetPoints(splittedArray[LEFT]))[medianIndex], dim-1);
 	node->left = spKDTreeNodeCreate(splittedArray[LEFT],
@@ -77,7 +77,6 @@ SPKDTreeNode* spKDTreeNodeCreate(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHO
 	spKDArrayDestroy(splittedArray[LEFT]);
 	spKDArrayDestroy(splittedArray[RIGHT]);
 	free(splittedArray);
-	fflush(NULL);
 
 	if (node->left == NULL || node->right == NULL) { //if create failed, spLogger msg inside
 		spKDTreeNodeDestroy(node);
@@ -128,7 +127,7 @@ int spKDTreeNodeSplitByDim(SPKDArray* arr, int dim, SP_KD_TREE_SPLIT_METHOD spli
 		return (rand() % spKDArrayGetDim(arr) + 1); // spLogger msg inside
 	}
 	if (splitMethod == INCREMENTAL) {
-		return ((dim+1) % spKDArrayGetDim(arr)); // spLogger msg inside
+		return ((dim+1) % spKDArrayGetDim(arr) + 1); // spLogger msg inside
 	}
 	return INVALID;
 }

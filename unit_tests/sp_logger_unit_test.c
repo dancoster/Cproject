@@ -161,23 +161,23 @@ static bool basicLoggerUndifined() {
 	return true;
 }
 
-//int main() {
-//	RUN_TEST(basicLoggerTest);
-//	printf("*********************************************\n");
-//	RUN_TEST(basicLoggerErrorTest);
-//	printf("*********************************************\n");
-//	RUN_TEST(basicLoggerDebugTest);
-//	printf("*********************************************\n");
-//	RUN_TEST(basicLoggerWarningTest);
-//	printf("*********************************************\n");
-//	RUN_TEST(basicLoggerInfoTest);
-//	printf("*********************************************\n");
-//	RUN_TEST(basicLoggerInvalidArgs);
-//	printf("*********************************************\n");
-//	RUN_TEST(basicLoggerUndifined);
-//	printf("*********************************************\n");
-//
-//	printf("test ok!");
-//	return true;
-//}
+int main() {
+	RUN_TEST(basicLoggerTest);
+	printf("*********************************************\n");
+	RUN_TEST(basicLoggerErrorTest);
+	printf("*********************************************\n");
+	RUN_TEST(basicLoggerDebugTest);
+	printf("*********************************************\n");
+	RUN_TEST(basicLoggerWarningTest);
+	printf("*********************************************\n");
+	RUN_TEST(basicLoggerInfoTest);
+	printf("*********************************************\n");
+	RUN_TEST(basicLoggerInvalidArgs);
+	printf("*********************************************\n");
+	RUN_TEST(basicLoggerUndifined);
+	printf("*********************************************\n");
+
+	printf("test ok!");
+	return true;
+}
 

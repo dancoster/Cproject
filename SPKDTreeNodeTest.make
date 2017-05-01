@@ -11,7 +11,7 @@ $(EXEC): $(OBJS)
 sp_kd_tree_unit_test.o: $(TESTS_DIR)/sp_kd_tree_unit_test.c $(TESTS_DIR)/unit_test_util.h SPKDTreeNode.h
 	$(CC) $(COMP_FLAG) -c $(TESTS_DIR)/$*.c
 SPKDTreeNode.o: SPKDTreeNode.c SPKDTreeNode.h 
-	$(CC) $(COMP_FLAG) -c $(TESTS_DIR)/$*.c
+	$(CC) $(COMP_FLAG) -c $*.c
 SPPoint.o: SPPoint.c SPPoint.h 
 	$(CC) $(COMP_FLAG) -c $*.c
 SPLogger.o: SPLogger.c SPLogger.h

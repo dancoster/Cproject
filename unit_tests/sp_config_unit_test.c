@@ -1,10 +1,3 @@
-/*
- * sp_config_unit_test.c
- *
- *  Created on: 26 באפר 2017
- *      Author: Dan Coster
- */
-
 #include "unit_test_util.h"
 #include <stdbool.h>
 #include <string.h>
@@ -147,21 +140,21 @@ bool configFilesDefultValues(){
 	return true;
 	}
 
-//int main(){
-//	RUN_TEST(noConfigFile);
-//	printf("*********************************************\n");
-//	RUN_TEST(configFileNoArgs);
-//	printf("*********************************************\n");
-//	RUN_TEST(configFileMissingParameterLines);
-//	printf("*********************************************\n");
-//	RUN_TEST(configFileInvalidArgs);
-//	printf("*********************************************\n");
-//	RUN_TEST(configFilesSetValues);
-//	printf("*********************************************\n");
-//	RUN_TEST(configFilesDefultValues);
-//	printf("*********************************************\n");
-//
-//	printf("test ok!");
-//	return 0;
-//}
+int main(){
+	RUN_TEST(noConfigFile);
+	printf("*********************************************\n");
+	RUN_TEST(configFileNoArgs);
+	printf("*********************************************\n");
+	RUN_TEST(configFileMissingParameterLines);
+	printf("*********************************************\n");
+	RUN_TEST(configFileInvalidArgs);
+	printf("*********************************************\n");
+	RUN_TEST(configFilesSetValues);
+	printf("*********************************************\n");
+	RUN_TEST(configFilesDefultValues);
+	printf("*********************************************\n");
+
+	printf("test ok!");
+	return 0;
+}
 

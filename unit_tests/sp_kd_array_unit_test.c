@@ -1,10 +1,3 @@
-/*
- * sp_kd_array_unit_test.c
- *
- *  Created on: 28 באפר 2017
- *      Author: Dan Coster
- */
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -93,14 +86,14 @@ bool SplittingTest(){
 	return true;
 }
 
-//int main() {
-//	RUN_TEST(IntializationTest);
-//	printf("*********************************************\n");
-//	RUN_TEST(SortingTest);
-//	printf("*********************************************\n");
-//	RUN_TEST(SplittingTest);
-//	printf("*********************************************\n");
-//	printf("test ok!");
-//	return 0;
-//}
+int main() {
+	RUN_TEST(IntializationTest);
+	printf("*********************************************\n");
+	RUN_TEST(SortingTest);
+	printf("*********************************************\n");
+	RUN_TEST(SplittingTest);
+	printf("*********************************************\n");
+	printf("test ok!");
+	return 0;
+}
 
