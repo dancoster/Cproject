@@ -64,7 +64,10 @@ SP_LOGGER_MSG spLoggerPrintError(const char* msg, const char* file,
 			|| logger->level == SP_LOGGER_INFO_WARNING_ERROR_LEVEL
 			|| logger->level == SP_LOGGER_DEBUG_INFO_WARNING_ERROR_LEVEL) {
 		char output[STR_MAX_LENGTH+1];
-		sprintf(output, "---ERROR---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg);
+		if (sprintf(output,
+				"---ERROR---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg) < 0) {
+			return SP_LOGGER_WRITE_FAIL;
+		}
 		if (fprintf(logger->outputChannel, "%s", output) < 0) {
 			return SP_LOGGER_WRITE_FAIL;
 		}
@@ -90,7 +93,10 @@ SP_LOGGER_MSG spLoggerPrintWarning(const char* msg, const char* file,
 			|| logger->level == SP_LOGGER_INFO_WARNING_ERROR_LEVEL
 			|| logger->level == SP_LOGGER_DEBUG_INFO_WARNING_ERROR_LEVEL) {
 		char output[STR_MAX_LENGTH+1];
-		sprintf(output, "---WARNING---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg);
+		if (sprintf(output,
+				"---WARNING---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg) < 0) {
+			return SP_LOGGER_WRITE_FAIL;
+		}
 		if (fprintf(logger->outputChannel, "%s", output) < 0) {
 			return SP_LOGGER_WRITE_FAIL;
 		}
@@ -114,7 +120,9 @@ SP_LOGGER_MSG spLoggerPrintInfo(const char* msg) {
 	if (logger->level == SP_LOGGER_INFO_WARNING_ERROR_LEVEL
 			|| logger->level == SP_LOGGER_DEBUG_INFO_WARNING_ERROR_LEVEL) {
 		char output[STR_MAX_LENGTH+1];
-		sprintf(output, "---INFO---\n- message: %s\n", msg);
+		if (sprintf(output, "---INFO---\n- message: %s\n", msg) < 0) {
+			return SP_LOGGER_WRITE_FAIL;
+		}
 		if (fprintf(logger->outputChannel, "%s", output) < 0) {
 			return SP_LOGGER_WRITE_FAIL;
 		}
@@ -138,7 +146,10 @@ SP_LOGGER_MSG spLoggerPrintDebug(const char* msg, const char* file,
 
 	if (logger->level == SP_LOGGER_DEBUG_INFO_WARNING_ERROR_LEVEL) {
 		char output[STR_MAX_LENGTH+1];
-		sprintf(output, "---DEBUG---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg);
+		if (sprintf(output,
+				"---DEBUG---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg) < 0) {
+			return SP_LOGGER_WRITE_FAIL;
+		}
 		if (fprintf(logger->outputChannel, "%s", output) < 0) {
 			return SP_LOGGER_WRITE_FAIL;
 		}
